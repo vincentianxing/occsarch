@@ -23,6 +23,6 @@ var map = new mapboxgl.Map({
       },
     ],
   },
-  center: [-112, 35], // starting position
+  center: [-112, 36], // starting position
   zoom: 4.5, // starting zoom
 });
