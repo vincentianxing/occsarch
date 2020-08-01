@@ -1,0 +1,67 @@
+This is a list of the columns in Designs_Sites_Vessels.csv and a short 
+description of each. For all columns besides the ID columns, there is no 
+guarantee that the row actually has data for that column (i.e., a design may 
+be missing location data). 
+
+design ID \
+vessel ID  >-- Just a unique ID for each design, vessel, site
+site ID   /
+site desig - USGS? site designation. Probably won't use.
+site name
+state/quad - some notation describing the location within a state -- possibly also USGS defined? Probably won't use. 
+UTM Zone
+UTM East
+UTM North
+Latitude - I calculated this and longitude given the UTM coordinates. 
+Longitude
+Elevation
+period - Period I (PI) through Period IV (PIV) also BM3? Unsure as to the meaning. 
+earliest date
+latest date
+mean date - We will probably use this column to mark the date. 
+Run I group - For these next 5, some roman numeral I-X it looks like. Unsure as to the meaning. 
+Run II group
+Run III group
+Run IV group
+Run V group
+catalog - some random number, probably won't use. 
+museum - related to catalog probably. 
+diameter
+height
+circumf
+weight
+proven - includes some comments ("room", "kiva", "trash"), unlikely to be used. Only found in ~1/2 of rows. 
+feature - generally "burial" or "cremation", Only found in ~1/3 of rows, unlikely to be used. 
+room - number, unlikely to be used.
+level - more detailed info related to room, unlikely to be used. 
+form - "bowl", "jar", "cup", etc. Found in almost every row. 
+condit - "whole", "partial", "rsherd"
+paint - "mineral", "carbon", "glaze"
+type - some kind of classification, unsure how to interpret. Could be useful
+vessel comments
+design - A, B, C, etc. could be useful to plot
+design loc - where on the vessel the design is located
+design orient - more details regarding design location
+rim design - "plain", "ticked", etc. 
+width
+width field
+repeats
+color - probably should be plotted - "B/W", "B/R", etc. 
+cont line - this column through to Figurative is true/false
+neg/pos
+line break
+motifs alt
+outline/fill
+panels
+Figurative
+Framing lines - "none", "thick", "thin", etc. 
+Design code - "solid", "hatched", could be useful?
+pattern cat - "oneD", "finite", could be useful
+sym struc - !!!! this and "sym design" are what we are primarily plotting
+sym design - !!!!
+design comments
+band color - these last columns are generally unused
+V panel sym des
+V panel color
+H panel sym des
+H panel color
