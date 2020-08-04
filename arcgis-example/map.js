@@ -120,6 +120,34 @@ require([
 
   map.add(datalayer);
 
+  view.when().then(function() {
+    // When the view is ready, clone the heatmap renderer
+    // from the only layer in the web map
+  
+    const layer = datalayer;
+    const heatmapRenderer = datalayer.renderer.clone();
+  
+    // The following simple renderer will render all points as simple
+    // markers at certain scales
+  
+    const simpleRenderer = {
+      type: "simple",
+      symbol: {
+        type: "simple-marker",
+        color: "#c80000",
+        size: 5
+      }
+    };
+  
+    // When the scale is larger than 1:92,224 (zoomed in passed that scale),
+    // then switch from a heatmap renderer to a simple renderer. When zoomed
+    // out beyond that scale, switch back to the heatmap renderer
+  
+    view.watch("scale", function(newValue) {
+      layer.renderer = newValue <= 92224 ? simpleRenderer : heatmapRenderer;
+    });
+  });
+
   // Create tile layer from Mapserver
   // var baseLayer = new TileLayer({
   //   url:
