@@ -60,8 +60,4 @@ pattern cat - "oneD", "finite", could be useful
 sym struc - !!!! this and "sym design" are what we are primarily plotting
 sym design - !!!!
 design comments
-band color - these last columns are generally unused
-V panel sym des
-V panel color
-H panel sym des
-H panel color
+band color - "1-color", "2-color", "colored"
