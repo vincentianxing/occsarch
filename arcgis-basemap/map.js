@@ -1,13 +1,14 @@
 require([
-  "esri/Map",
-  "esri/views/MapView",
-  "esri/Basemap",
-  "esri/widgets/BasemapToggle",
-  "esri/widgets/BasemapGallery",
-  "esri/layers/TileLayer",
-  "esri/layers/MapImageLayer",
-  "esri/layers/FeatureLayer",
-  "esri/layers/support/Sublayer",
+  'esri/Map',
+  'esri/views/MapView',
+  'esri/Basemap',
+  'esri/widgets/BasemapToggle',
+  'esri/widgets/BasemapGallery',
+  'esri/layers/TileLayer',
+  'esri/layers/MapImageLayer',
+  'esri/layers/FeatureLayer',
+  'esri/layers/support/Sublayer',
+  'esri/renderers/HeatmapRenderer',
 ], function (
   Map,
   MapView,
@@ -24,12 +25,12 @@ require([
     baseLayers: [
       new TileLayer({
         url:
-          "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer",
-        title: "Basemap",
+          'https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer',
+        title: 'Basemap',
       }),
     ],
-    title: "basemap",
-    id: "basemap",
+    title: 'basemap',
+    id: 'basemap',
   });
 
   // Create the map
@@ -38,7 +39,7 @@ require([
   });
 
   var view = new MapView({
-    container: "viewDiv",
+    container: 'viewDiv',
     map: map,
     center: [-112, 36],
     zoom: 6,
@@ -49,17 +50,17 @@ require([
     view: view,
     source: {
       portal: {
-        url: "https://www.arcgis.com",
+        url: 'https://www.arcgis.com',
         useVectorBasemaps: true, // Load vector tile basemaps
       },
     },
   });
 
-  view.ui.add(basemapGallery, "top-right");
+  view.ui.add(basemapGallery, 'top-right');
 
   // Add a feature layer
   var ecoLayer = new MapImageLayer({
-    url: "https://rmgsc.cr.usgs.gov/arcgis/rest/services/contUS/MapServer",
+    url: 'https://rmgsc.cr.usgs.gov/arcgis/rest/services/contUS/MapServer',
     sublayers: [
       {
         id: 4,
@@ -71,7 +72,7 @@ require([
       },
       {
         id: 2,
-        visible: true,
+        visible: false,
       },
       {
         id: 1,
