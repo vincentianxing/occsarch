@@ -4,6 +4,7 @@ require([
   'esri/Basemap',
   'esri/widgets/BasemapToggle',
   'esri/widgets/BasemapGallery',
+	'esri/widgets/Slider',
   'esri/layers/TileLayer',
   'esri/layers/MapImageLayer',
   'esri/layers/FeatureLayer',
@@ -15,6 +16,7 @@ require([
   Basemap,
   BasemapToggle,
   BasemapGallery,
+	Slider,
   TileLayer,
   MapImageLayer,
   FeatureLayer,
@@ -33,35 +35,9 @@ require([
     id: 'basemap',
   });
 
-  // Create the map
-  var map = new Map({
-    basemap: basemap,
-  });
-
-  var view = new MapView({
-    container: 'viewDiv',
-    map: map,
-    center: [-112, 36],
-    zoom: 6,
-  });
-
-  // Add a default basemap selecting widget
-  var basemapGallery = new BasemapGallery({
-    view: view,
-    source: {
-      portal: {
-        url: 'https://www.arcgis.com',
-        useVectorBasemaps: true, // Load vector tile basemaps
-      },
-    },
-  });
-
-  view.ui.add(basemapGallery, 'top-right');
-
-  // Add a feature layer
   var ecoLayer = new MapImageLayer({
     url: 'https://rmgsc.cr.usgs.gov/arcgis/rest/services/contUS/MapServer',
-    sublayers: [
+		sublayers: [
       {
         id: 4,
         visible: false,
@@ -82,10 +58,8 @@ require([
         id: 0,
         visible: false,
       },
-    ],
+    ]
   });
-
-  map.add(ecoLayer);
 
   // Heatmap
   const renderer = {
@@ -109,30 +83,61 @@ require([
     minPixelIntensity: 0,
   };
 
-  const datalayer = new FeatureLayer({
-    // URL to the service
-    //old csv
-    //url: "https://services5.arcgis.com/L1mg0iSh5ckmKwdF/arcgis/rest/services/latlonsites/FeatureServer",
+  //const dataURL = 'https://services5.arcgis.com/L1mg0iSh5ckmKwdF/arcgis/rest/services/latlonsites/FeatureServer';
+	//const dataURL = 'https://services5.arcgis.com/L1mg0iSh5ckmKwdF/arcgis/rest/services/designs_sites_vessels/FeatureServer';
+	const dataURL = 'https://services5.arcgis.com/L1mg0iSh5ckmKwdF/arcgis/rest/services/d_s_v/FeatureServer';
 
-    //new csv
-    url:
-      'https://services5.arcgis.com/L1mg0iSh5ckmKwdF/arcgis/rest/services/d_s_v/FeatureServer',
-      //'https://services5.arcgis.com/L1mg0iSh5ckmKwdF/arcgis/rest/services/designs_sites_vessels/FeatureServer',
+  var dataLayer = new FeatureLayer({
+		url: dataURL,
     renderer: renderer,
   });
 
-  map.add(datalayer);
+	var timeSlider = new Slider({
+		container: "time",
+		min: 400,
+		max: 1700,
+		steps: 50,
+		values: [1000],
+		visibleElements: {
+			labels: true,
+			rangeLabels: true
+		}
+	});
+
+	var map = new Map({
+		basemap: basemap,
+		layers: [ecoLayer, dataLayer]
+	});
+
+  var view = new MapView({
+    container: 'viewDiv',
+    map: map,
+    center: [-112, 36],
+    zoom: 6,
+  });
+  
+	// Add a default basemap selecting widget
+  var basemapGallery = new BasemapGallery({
+    view: view,
+    source: {
+      portal: {
+        url: 'https://www.arcgis.com',
+        useVectorBasemaps: true, // Load vector tile basemaps
+      },
+    },
+  });
+  view.ui.add(basemapGallery, 'top-right');
+
+  view.ui.add("infoDiv", 'bottom-right');
 
   view.when().then(function () {
     // When the view is ready, clone the heatmap renderer
     // from the only layer in the web map
-
-    const layer = datalayer;
-    const heatmapRenderer = datalayer.renderer.clone();
+    const layer = dataLayer;
+    const heatmapRenderer = dataLayer.renderer.clone();
 
     // The following simple renderer will render all points as simple
     // markers at certain scales
-
     const simpleRenderer = {
       type: 'simple',
       symbol: {
@@ -145,17 +150,9 @@ require([
     // When the scale is larger than 1:92,224 (zoomed in passed that scale),
     // then switch from a heatmap renderer to a simple renderer. When zoomed
     // out beyond that scale, switch back to the heatmap renderer
-
     view.watch('scale', function (newValue) {
       layer.renderer = newValue <= 92224 ? simpleRenderer : heatmapRenderer;
     });
   });
 
-  // Create tile layer from Mapserver
-  // var baseLayer = new TileLayer({
-  //   url:
-  //     "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer",
-  // });
-
-  // map.add(baseLayer);
 });

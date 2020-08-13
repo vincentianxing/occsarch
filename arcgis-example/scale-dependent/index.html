@@ -14,6 +14,10 @@
       height: 100%;
       width: 100%;
     }
+
+		#infoDiv {
+			width: 450px;
+		}
   </style>
   <!-- ArcGIS API CDN -->
   <link rel="stylesheet" href="https://js.arcgis.com/4.16/esri/css/main.css">
@@ -25,6 +29,14 @@
 
 <body>
   <div id="viewDiv"></div>
+	<div id="infoDiv" class="esri-widget">
+		Time: 
+		<div id="time" class="slider"></div>
+		<button id="query-designs" class="esri-widget">
+			Query Designs
+		</button>
+		<div id="results" class="esri-widget"></div>
+	</div>
 </body>
 
 </html>
