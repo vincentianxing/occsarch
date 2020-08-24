@@ -97,6 +97,9 @@ require([
 
   dataLayer.featureReduction = {
     type: "cluster",
+    popupTemplate: {
+      content: "This cluster represents the {cluster_type_sym_struc} symmetry."
+    },
     labelingInfo: [{
       // turn off deconfliction to ensure all clusters are labeled
       deconflictionStrategy: "none",
@@ -113,7 +116,25 @@ require([
         }
       },
       labelPlacement: "center-center",
-    }]
+    }//,
+    //{
+      // turn off deconfliction to ensure all clusters are labeled
+      //deconflictionStrategy: "none",
+      //labelExpressionInfo: {
+        //expression: "$feature.cluster_type_sym_struc"
+      //},
+      //symbol: {
+        //type: "text",
+        //color: "white",
+        //font: {
+          //weight: "bold",
+          //family: "Noto Sans",
+          //size: "14px"
+        //}
+      //},
+      //labelPlacement: "above-right",
+    //}
+  ]
   }
 
   var map = new Map({
