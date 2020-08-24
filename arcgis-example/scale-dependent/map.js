@@ -90,8 +90,8 @@ require([
   };
 
 	// see runDesignQuery: vessels with a mean date within margin years of the selected time will be displayed
-	//var time;
-	//const margin = 50;
+	// TODO: implement a margin slider so the user can select this value
+	const margin = 50;
 	var timeSlider = new Slider({
 		container: "time",
 		min: 400,
@@ -106,9 +106,14 @@ require([
 
 	var queryDesigns = document.getElementById("query-designs");
 
+	// latlon sites test data (sites only)
   //const dataURL = 'https://services5.arcgis.com/L1mg0iSh5ckmKwdF/arcgis/rest/services/latlonsites/FeatureServer';
+	// first designs sites vessels 
 	//const dataURL = 'https://services5.arcgis.com/L1mg0iSh5ckmKwdF/arcgis/rest/services/designs_sites_vessels/FeatureServer';
-	const dataURL = 'https://services5.arcgis.com/L1mg0iSh5ckmKwdF/arcgis/rest/services/d_s_v/FeatureServer';
+	// designs sites vessels table 2 (dorothy sent updated data)
+	//const dataURL = 'https://services5.arcgis.com/L1mg0iSh5ckmKwdF/arcgis/rest/services/d_s_v/FeatureServer';
+	// designs sites vessels table 3 (fixed mean date column, updated max record count)
+	const dataURL = 'https://services5.arcgis.com/yVCUkdcXCabMuIIK/ArcGIS/rest/services/designs_sites_vessels/FeatureServer';
 
 	// contains all the designs, not displayed
   var dataLayer = new FeatureLayer({
@@ -177,16 +182,13 @@ require([
 		var query = dataLayer.createQuery();
 		var selectedTime = timeSlider.values[0];
 
-		//problem: the mean_date column in the database is stored as a string (there is I think one row with value 1037.5 which the import probably didn't like), which causes problems with the where clause
-		/*
+		// select only rows such that the mean date is within margin years of the selected time
 		var earlyBound = selectedTime - margin;
 		var lateBound = selectedTime + margin;
-		query.where = "not mean_date = 'NaN' and mean_date is not null and mean_date >= " + earlyBound + " and mean_date <= " + lateBound;
-		*/
-		// workaround: use only the earliest_date and latest_date columns, which are stored as integers, and select only designs such that the selected time falls between the earliest and latest date
-		// this means currently the margin variable does nothing
+		query.where = "mean_date >= " + earlyBound + " and mean_date <= " + lateBound;
 		
-		query.where = "earliest_date <= " + selectedTime + " and latest_date >= " + selectedTime;
+		// alternate method of querying the database to select only rows such that the selected time falls in between the estimated dates
+		//query.where = "earliest_date <= " + selectedTime + " and latest_date >= " + selectedTime;
 
 		return dataLayer.queryFeatures(query);
 	}
@@ -194,7 +196,7 @@ require([
 	function displayResults(results) {
 		//update the slider, reporting how many vessels found
 		var numDesigns = results.features.length;
-		document.getElementById("results").innerHTML = numDesigns + " vessels found";
+		document.getElementById("results").innerHTML = numDesigns + " designs found";
 		
 		//create a new layer with the results
 		resultsLayer = new FeatureLayer({
