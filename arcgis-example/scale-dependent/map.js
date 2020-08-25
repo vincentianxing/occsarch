@@ -67,6 +67,7 @@ require([
 	*/
 
 	// TODO: customize the heatmap so that it looks better
+	// Change colors and make it transparent?
   // Heatmap
   const heatmap = {
     type: 'heatmap',
@@ -90,19 +91,29 @@ require([
   };
 
 	// see runDesignQuery: vessels with a mean date within margin years of the selected time will be displayed
-	// TODO: implement a margin slider so the user can select this value
-	const margin = 50;
 	var timeSlider = new Slider({
 		container: "time",
 		min: 400,
 		max: 1700,
-		steps: 50,
+		steps: 25,
 		values: [1000],
 		visibleElements: {
 			labels: true,
 			rangeLabels: true
 		}
 	});
+
+	var marginSlider = new Slider({
+		container: "margin",
+		min: 0,
+		max: 500,
+		steps: 10,
+		values: [50],
+		visibleElements: {
+			labels: true,
+			rangeLabels: true
+		}
+	});	
 
 	var queryDesigns = document.getElementById("query-designs");
 
@@ -181,10 +192,11 @@ require([
 	function runDesignQuery() {
 		var query = dataLayer.createQuery();
 		var selectedTime = timeSlider.values[0];
+		var selectedMargin = marginSlider.values[0];
 
 		// select only rows such that the mean date is within margin years of the selected time
-		var earlyBound = selectedTime - margin;
-		var lateBound = selectedTime + margin;
+		var earlyBound = selectedTime - selectedMargin;
+		var lateBound = selectedTime + selectedMargin;
 		query.where = "mean_date >= " + earlyBound + " and mean_date <= " + lateBound;
 		
 		// alternate method of querying the database to select only rows such that the selected time falls in between the estimated dates
