@@ -4,12 +4,12 @@ require([
   'esri/Basemap',
   'esri/widgets/BasemapToggle',
   'esri/widgets/BasemapGallery',
-	'esri/widgets/Slider',
+  'esri/widgets/Slider',
   'esri/layers/TileLayer',
   'esri/layers/MapImageLayer',
   'esri/layers/FeatureLayer',
   'esri/layers/support/Sublayer',
-  'esri/renderers/HeatmapRenderer'
+  'esri/renderers/HeatmapRenderer',
 ], function (
   Map,
   MapView,
@@ -20,54 +20,11 @@ require([
   TileLayer,
   MapImageLayer,
   FeatureLayer,
-	SubLayer,
-	HeatmapRenderer
+  SubLayer,
+  HeatmapRenderer
 ) {
-
-  // Create a custom basemap
-  var basemap = new Basemap({
-    baseLayers: [
-      new TileLayer({
-        url:
-          'https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer',
-        title: 'Basemap',
-      }),
-    ],
-    title: 'basemap',
-    id: 'basemap',
-  });
-
-	// Currently unused
-	/*
-	var ecoLayer = new MapImageLayer({
-    url: 'https://rmgsc.cr.usgs.gov/arcgis/rest/services/contUS/MapServer',
-		sublayers: [
-      {
-        id: 4,
-        visible: false,
-      },
-      {
-        id: 3,
-        visible: false,
-      },
-      {
-        id: 2,
-        visible: false,
-      },
-      {
-        id: 1,
-        visible: false,
-      },
-      {
-        id: 0,
-        visible: false,
-      },
-    ]
-  });
-	*/
-
-	// TODO: customize the heatmap so that it looks better
-	// Change colors and make it transparent?
+  // TODO: customize the heatmap so that it looks better
+  // Change colors and make it transparent?
   // Heatmap
   const heatmap = {
     type: 'heatmap',
@@ -90,76 +47,65 @@ require([
     minPixelIntensity: 0,
   };
 
-	// see runDesignQuery: vessels with a mean date within margin years of the selected time will be displayed
-	var timeSlider = new Slider({
-		container: "time",
-		min: 400,
-		max: 1700,
-		steps: 25,
-		values: [1000],
-		visibleElements: {
-			labels: true,
-			rangeLabels: true
-		}
-	});
-
-	var marginSlider = new Slider({
-		container: "margin",
-		min: 0,
-		max: 500,
-		steps: 10,
-		values: [50],
-		visibleElements: {
-			labels: true,
-			rangeLabels: true
-		}
-	});	
-
-	var queryDesigns = document.getElementById("query-designs");
-
-	// latlon sites test data (sites only)
-  //const dataURL = 'https://services5.arcgis.com/L1mg0iSh5ckmKwdF/arcgis/rest/services/latlonsites/FeatureServer';
-	// first designs sites vessels 
-	//const dataURL = 'https://services5.arcgis.com/L1mg0iSh5ckmKwdF/arcgis/rest/services/designs_sites_vessels/FeatureServer';
-	// designs sites vessels table 2 (dorothy sent updated data)
-	//const dataURL = 'https://services5.arcgis.com/L1mg0iSh5ckmKwdF/arcgis/rest/services/d_s_v/FeatureServer';
-	// designs sites vessels table 3 (fixed mean date column, updated max record count)
-	const dataURL = 'https://services5.arcgis.com/yVCUkdcXCabMuIIK/ArcGIS/rest/services/designs_sites_vessels/FeatureServer';
-
-	// contains all the designs, not displayed
-  var dataLayer = new FeatureLayer({
-		url: dataURL,
-		visible: false
+  // see runDesignQuery: vessels with a mean date within margin years of the selected time will be displayed
+  var timeSlider = new Slider({
+    container: 'time',
+    min: 400,
+    max: 1700,
+    steps: 25,
+    values: [1000],
+    visibleElements: {
+      labels: true,
+      rangeLabels: true,
+    },
   });
 
-	var map = new Map({
-		basemap: basemap
-	});
+  var marginSlider = new Slider({
+    container: 'margin',
+    min: 0,
+    max: 500,
+    steps: 10,
+    values: [50],
+    visibleElements: {
+      labels: true,
+      rangeLabels: true,
+    },
+  });
 
-	// setting up various UI elements
+  var queryDesigns = document.getElementById('query-designs');
+
+  // latlon sites test data (sites only)
+  //const dataURL = 'https://services5.arcgis.com/L1mg0iSh5ckmKwdF/arcgis/rest/services/latlonsites/FeatureServer';
+  // first designs sites vessels
+  //const dataURL = 'https://services5.arcgis.com/L1mg0iSh5ckmKwdF/arcgis/rest/services/designs_sites_vessels/FeatureServer';
+  // designs sites vessels table 2 (dorothy sent updated data)
+  //const dataURL = 'https://services5.arcgis.com/L1mg0iSh5ckmKwdF/arcgis/rest/services/d_s_v/FeatureServer';
+  // designs sites vessels table 3 (fixed mean date column, updated max record count)
+  const dataURL =
+    'https://services5.arcgis.com/yVCUkdcXCabMuIIK/ArcGIS/rest/services/designs_sites_vessels/FeatureServer';
+
+  // contains all the designs, not displayed
+  var dataLayer = new FeatureLayer({
+    url: dataURL,
+    visible: false,
+  });
+
+  var map = new Map({
+    basemap: 'topo',
+  });
+
+  // setting up various UI elements
   var view = new MapView({
     container: 'viewDiv',
     map: map,
     center: [-112, 36],
     zoom: 6,
   });
-  
-	// Add a default basemap selecting widget
-  var basemapGallery = new BasemapGallery({
-    view: view,
-    source: {
-      portal: {
-        url: 'https://www.arcgis.com',
-        useVectorBasemaps: true, // Load vector tile basemaps
-      },
-    },
-  });
-  view.ui.add(basemapGallery, 'top-right');
 
-  view.ui.add("infoDiv", 'bottom-right');
+  view.ui.add('infoDiv', 'bottom-right');
 
-	// not sure how to implement the scale dependent part while using the query
-	/*
+  // not sure how to implement the scale dependent part while using the query
+  /*
   view.when().then(scaleDependent);
 	function scaleDependent() {
     const layer = resultsLayer;
@@ -184,42 +130,43 @@ require([
   }
 	*/
 
-	// query for designs with the specified time when the query button is clicked
-	queryDesigns.addEventListener("click", function() {
-		runDesignQuery().then(displayResults);
-	});
+  // query for designs with the specified time when the query button is clicked
+  queryDesigns.addEventListener('click', function () {
+    runDesignQuery().then(displayResults);
+  });
 
-	function runDesignQuery() {
-		var query = dataLayer.createQuery();
-		var selectedTime = timeSlider.values[0];
-		var selectedMargin = marginSlider.values[0];
+  function runDesignQuery() {
+    var query = dataLayer.createQuery();
+    var selectedTime = timeSlider.values[0];
+    var selectedMargin = marginSlider.values[0];
 
-		// select only rows such that the mean date is within margin years of the selected time
-		var earlyBound = selectedTime - selectedMargin;
-		var lateBound = selectedTime + selectedMargin;
-		query.where = "mean_date >= " + earlyBound + " and mean_date <= " + lateBound;
-		
-		// alternate method of querying the database to select only rows such that the selected time falls in between the estimated dates
-		//query.where = "earliest_date <= " + selectedTime + " and latest_date >= " + selectedTime;
+    // select only rows such that the mean date is within margin years of the selected time
+    var earlyBound = selectedTime - selectedMargin;
+    var lateBound = selectedTime + selectedMargin;
+    query.where =
+      'mean_date >= ' + earlyBound + ' and mean_date <= ' + lateBound;
 
-		return dataLayer.queryFeatures(query);
-	}
+    // alternate method of querying the database to select only rows such that the selected time falls in between the estimated dates
+    //query.where = "earliest_date <= " + selectedTime + " and latest_date >= " + selectedTime;
 
-	function displayResults(results) {
-		//update the slider, reporting how many vessels found
-		var numDesigns = results.features.length;
-		document.getElementById("results").innerHTML = numDesigns + " designs found";
-		
-		//create a new layer with the results
-		resultsLayer = new FeatureLayer({
-			source: results.features,
-			renderer: heatmap,
-			objectIdField: "ObjectID"
-		});
+    return dataLayer.queryFeatures(query);
+  }
 
-		//update the map with the new layer
-		map.layers.removeAll();
-		map.layers.add(resultsLayer);
-	}
+  function displayResults(results) {
+    //update the slider, reporting how many vessels found
+    var numDesigns = results.features.length;
+    document.getElementById('results').innerHTML =
+      numDesigns + ' designs found';
 
+    //create a new layer with the results
+    resultsLayer = new FeatureLayer({
+      source: results.features,
+      renderer: heatmap,
+      objectIdField: 'ObjectID',
+    });
+
+    //update the map with the new layer
+    map.layers.removeAll();
+    map.layers.add(resultsLayer);
+  }
 });

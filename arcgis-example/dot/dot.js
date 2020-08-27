@@ -17,7 +17,7 @@ require([
   HeatmapRenderer,
   Sublayer
 ) {
-  // Simple map
+  // Simple map (UNUSED)
   const renderer = {
     type: 'simple',
     symbol: {
@@ -25,22 +25,24 @@ require([
       size: 6,
       color: 'black',
     },
-    // visualVariables: [
-    //   {
-    //     type: 'color',
-    //     field: 'sym_struc',
-    //     stops: [
-    //       { value: 'p111', color: 'red' },
-    //       { value: 'p112' },
-    //       { value: 'C1' },
-    //       { value: 'C2' },
-    //       { value: 'D1' },
-    //       { value: 'D2' },
-    //       { value: 'p2' },
-    //       { value: 'asym' },
-    //     ],
-    //   },
-    // ],
+    /*
+    visualVariables: [
+      {
+        type: 'color',
+        field: 'sym_struc',
+        stops: [
+          { value: 'p111', color: 'red' },
+          { value: 'p112' },
+          { value: 'C1' },
+          { value: 'C2' },
+          { value: 'D1' },
+          { value: 'D2' },
+          { value: 'p2' },
+          { value: 'asym' },
+        ],
+      },
+    ],
+    */
   };
 
   // Unique-value map
@@ -95,7 +97,8 @@ require([
   });
 
   var map = new Map({
-    basemap: 'gray-vector',
+    // basemap: 'gray-vector',
+    basemap: 'topo',
     layers: [dataLayer],
   });
 

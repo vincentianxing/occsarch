@@ -21,6 +21,7 @@ require([
   Sublayer
 ) {
   // Create a custom basemap
+  /*
   var basemap = new Basemap({
     baseLayers: [
       new TileLayer({
@@ -32,10 +33,11 @@ require([
     title: 'basemap',
     id: 'basemap',
   });
+  */
 
   // Create the map
   var map = new Map({
-    basemap: basemap,
+    basemap: 'topo',
   });
 
   var view = new MapView({
@@ -59,6 +61,7 @@ require([
   view.ui.add(basemapGallery, 'top-right');
 
   // Add a feature layer
+  /*
   var ecoLayer = new MapImageLayer({
     url: 'https://rmgsc.cr.usgs.gov/arcgis/rest/services/contUS/MapServer',
     sublayers: [
@@ -86,6 +89,7 @@ require([
   });
 
   map.add(ecoLayer);
+  */
 
   // Create tile layer from Mapserver
   // var baseLayer = new TileLayer({

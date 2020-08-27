@@ -18,7 +18,7 @@ require([
   HeatmapRenderer,
   Sublayer
 ) {
-  // Simple map
+  // Simple map (UNUSED)
   const renderer = {
     type: 'simple',
     symbol: {
@@ -26,22 +26,24 @@ require([
       size: 6,
       color: 'black',
     },
-    // visualVariables: [
-    //   {
-    //     type: 'color',
-    //     field: 'sym_struc',
-    //     stops: [
-    //       { value: 'p111', color: 'red' },
-    //       { value: 'p112' },
-    //       { value: 'C1' },
-    //       { value: 'C2' },
-    //       { value: 'D1' },
-    //       { value: 'D2' },
-    //       { value: 'p2' },
-    //       { value: 'asym' },
-    //     ],
-    //   },
-    // ],
+    /*
+    visualVariables: [
+      {
+        type: 'color',
+        field: 'sym_struc',
+        stops: [
+          { value: 'p111', color: 'red' },
+          { value: 'p112' },
+          { value: 'C1' },
+          { value: 'C2' },
+          { value: 'D1' },
+          { value: 'D2' },
+          { value: 'p2' },
+          { value: 'asym' },
+        ],
+      },
+    ],
+    */
   };
 
   // Unique-value map
@@ -96,49 +98,51 @@ require([
   });
 
   dataLayer.featureReduction = {
-    type: "cluster",
+    type: 'cluster',
     popupTemplate: {
-      content: "This cluster represents the {cluster_type_sym_struc} symmetry."
+      content: 'This cluster represents the {cluster_type_sym_struc} symmetry.',
     },
-    labelingInfo: [{
-      // turn off deconfliction to ensure all clusters are labeled
-      deconflictionStrategy: "none",
-      labelExpressionInfo: {
-        expression: "Text($feature.cluster_count, '#,###')"
-      },
-      symbol: {
-        type: "text",
-        color: "black",
-        font: {
-          weight: "bold",
-          family: "Noto Sans",
-          size: "10px"
-        }
-      },
-      labelPlacement: "center-center",
-    }//,
-    //{
+    labelingInfo: [
+      {
+        // turn off deconfliction to ensure all clusters are labeled
+        deconflictionStrategy: 'none',
+        labelExpressionInfo: {
+          expression: "Text($feature.cluster_count, '#,###')",
+        },
+        symbol: {
+          type: 'text',
+          color: 'black',
+          font: {
+            weight: 'bold',
+            family: 'Noto Sans',
+            size: '10px',
+          },
+        },
+        labelPlacement: 'center-center',
+      }, //,
+      //{
       // turn off deconfliction to ensure all clusters are labeled
       //deconflictionStrategy: "none",
       //labelExpressionInfo: {
-        //expression: "$feature.cluster_type_sym_struc"
+      //expression: "$feature.cluster_type_sym_struc"
       //},
       //symbol: {
-        //type: "text",
-        //color: "white",
-        //font: {
-          //weight: "bold",
-          //family: "Noto Sans",
-          //size: "14px"
-        //}
+      //type: "text",
+      //color: "white",
+      //font: {
+      //weight: "bold",
+      //family: "Noto Sans",
+      //size: "14px"
+      //}
       //},
       //labelPlacement: "above-right",
-    //}
-  ]
-  }
+      //}
+    ],
+  };
 
   var map = new Map({
-    basemap: 'gray-vector',
+    // basemap: 'gray-vector',
+    basemap: 'topo',
     layers: [dataLayer],
   });
 
