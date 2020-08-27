@@ -15,31 +15,31 @@
       width: 100%;
     }
 
-		#infoDiv {
-			width: 450px;
-		}
+    #infoDiv {
+      width: 450px;
+    }
   </style>
   <!-- ArcGIS API CDN -->
   <link rel="stylesheet" href="https://js.arcgis.com/4.16/esri/css/main.css">
   <script src="https://js.arcgis.com/4.16/"></script>
 
-  <script src="map.js"></script>
+  <script src="heatmap.js"></script>
 
 </head>
 
 <body>
   <div id="viewDiv"></div>
-	<div id="infoDiv" class="esri-widget">
-		Designs dated within "Margin" years of "Year" will be displayed on the heatmap.<br>
-		Year: 
-		<div id="time" class="slider"></div>
-		Margin:
-		<div id="margin" class="slider"></div>
-		<button id="query-designs" class="esri-widget">
-			Query Designs
-		</button>
-		<div id="results" class="esri-widget"></div>
-	</div>
+  <div id="infoDiv" class="esri-widget">
+    Designs dated within "Margin" years of "Year" will be displayed on the heatmap.<br>
+    Year:
+    <div id="time" class="slider"></div>
+    Margin:
+    <div id="margin" class="slider"></div>
+    <button id="query-designs" class="esri-widget">
+      Query Designs
+    </button>
+    <div id="results" class="esri-widget"></div>
+  </div>
 </body>
 
 </html>
