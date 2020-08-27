@@ -1,0 +1,30 @@
+html,
+body,
+#viewDiv {
+	padding: 0;
+	margin: 0;
+	height: 100%;
+	width: 100%;
+}
+
+#infoDiv {
+	width: 450px;
+}
+
+#rendererSelector {
+	height: 120px;
+	width: 100%;
+}
+
+.rendererItem {
+	width: 100%;
+	padding: 12px;
+	text-align: center;
+	vertical-align: baseline;
+	cursor: pointer;
+	height: 40px;
+}
+
+.rendererItem:focus, .rendererItem:hover {
+	background-color:dimgrey;
+}
