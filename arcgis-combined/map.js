@@ -25,8 +25,7 @@ require([
   SubLayer,
   HeatmapRenderer
 ) {
-  // TODO: customize the heatmap so that it looks better
-  // Change colors and make it transparent?
+  // TODO: customize the heatmap so that it looks better (change colors)
   // Heatmap
   const heatmap = {
     type: 'heatmap',
@@ -107,6 +106,7 @@ require([
     ],
   };
 
+  // TODO: add multiple thumbs on the timeSlider to eliminate the need for marginSlider
   // see runDesignQuery: vessels with a mean date within margin years of the selected time will be displayed
   var timeSlider = new Slider({
     container: 'time',
@@ -117,7 +117,7 @@ require([
     visibleElements: {
       labels: true,
       rangeLabels: true,
-    },
+    }
   });
 
   var marginSlider = new Slider({
@@ -129,7 +129,7 @@ require([
     visibleElements: {
       labels: true,
       rangeLabels: true,
-    },
+    }
   });
 
   // latlon sites test data (sites only)
@@ -178,11 +178,26 @@ require([
   const rendererExpand = new Expand({
     view: view,
     content: renderersElement,
-    group: 'top-left',
+    group: 'top-left'
   });
   view.ui.add(rendererExpand, 'top-left');
   // Default to cluster rendering
   var selectedRenderer = 'Cluster';
+
+  // Add the opacity slider
+  var opacitySlider = new Slider({
+    container: 'opacity',
+    min: 0,
+    max: 1,
+    values: [1],
+    visibleElements: {
+      rangeLabels: true
+    }
+  });
+  opacitySlider.on(['click', 'thumb-drag', 'thumb-change'], function(event) {
+    if (typeof resultsLayer === 'undefined') return;
+    resultsLayer.opacity = opacitySlider.values[0];
+  });
 
   // Add a default basemap selecting widget
   /*
@@ -199,6 +214,11 @@ require([
 	*/
 
   view.ui.add('infoDiv', 'bottom-right');
+
+  // Remove the hideLoading div when the view is finished loading
+  view.when().then(function() {
+    document.getElementById('hideLoading').remove();
+  });
 
   // query for designs with the specified time when the query button is clicked
   var queryDesigns = document.getElementById('query-designs');

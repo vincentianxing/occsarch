@@ -14,28 +14,33 @@
 	<!-- -->
 
   <script src="map.js"></script>
-
 </head>
 
 <body>
-	<div id="rendererSelector" class="esri-widget">
-		<!-- Update the height of rendererSelector in main.css if you are going to add more options -->
-		<div class="rendererItem" rendererData="Heatmap">Heatmap</div>
-		<div class="rendererItem" rendererData="Dot">Dot</div>
-		<div class="rendererItem" rendererData="Cluster">Cluster</div>
-	</div>
   <div id="viewDiv"></div>
-	<div id="infoDiv" class="esri-widget">
-		Designs dated within "Margin" years of "Year" will be displayed on the heatmap.<br>
-		Year: 
-		<div id="time" class="slider"></div>
-		Margin:
-		<div id="margin" class="slider"></div>
-		<button id="query-designs" class="esri-widget">
-			Query Designs
-		</button>
-		<div id="results" class="esri-widget"></div>
-	</div>
+  <!-- Hide the UI while the view is loading -->
+  <div id="hideLoading" style="visibility:hidden">
+    <div id="rendererSelector" class="esri-widget">
+      <!-- Update the height of rendererSelector in main.css if you are going to add more options -->
+      <div class="rendererItem" rendererData="Heatmap">Heatmap</div>
+      <div class="rendererItem" rendererData="Dot">Dot</div>
+      <div class="rendererItem" rendererData="Cluster">Cluster</div>
+    </div>
+    <div id="infoDiv" class="esri-widget">
+      <label for="opacity">Opacity</label>
+      <div id="opacity" class="slider"></div>
+      <b>Query by Year</b><br>
+      Designs dated within "Margin" years of "Year" will be displayed on the heatmap.<br>
+      <label for="time">Year:</label>
+      <div id="time" class="slider"></div>
+      <label for="margin">Margin:</label>
+      <div id="margin" class="slider"></div>
+      <button class="esri-button" id="query-designs" type="button">
+        Query Designs
+      </button>
+      <div id="results" class="esri-widget"></div>
+    </div>
+  </div>
 </body>
 
 </html>

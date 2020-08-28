@@ -26,5 +26,5 @@ body,
 }
 
 .rendererItem:focus, .rendererItem:hover {
-	background-color:dimgrey;
+	background-color: dimgrey;
 }
