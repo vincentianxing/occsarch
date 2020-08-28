@@ -113,19 +113,7 @@ require([
     min: 400,
     max: 1700,
     steps: 25,
-    values: [1000],
-    visibleElements: {
-      labels: true,
-      rangeLabels: true,
-    }
-  });
-
-  var marginSlider = new Slider({
-    container: 'margin',
-    min: 0,
-    max: 500,
-    steps: 10,
-    values: [50],
+    values: [1000, 1100],
     visibleElements: {
       labels: true,
       rangeLabels: true,
@@ -228,14 +216,10 @@ require([
 
   function runDesignQuery() {
     var query = dataLayer.createQuery();
-    var selectedTime = timeSlider.values[0];
-    var selectedMargin = marginSlider.values[0];
 
-    // select only rows such that the mean date is within margin years of the selected time
-    var earlyBound = selectedTime - selectedMargin;
-    var lateBound = selectedTime + selectedMargin;
-    query.where =
-      'mean_date >= ' + earlyBound + ' and mean_date <= ' + lateBound;
+    var earlyBound = timeSlider.values[0];
+    var lateBound = timeSlider.values[1];
+    query.where = 'mean_date >= ' + earlyBound + ' and mean_date <= ' + lateBound;
 
     // alternate method of querying the database to select only rows such that the selected time falls in between the estimated dates
     //query.where = "earliest_date <= " + selectedTime + " and latest_date >= " + selectedTime;
