@@ -106,7 +106,6 @@ require([
     ],
   };
 
-  // TODO: add multiple thumbs on the timeSlider to eliminate the need for marginSlider
   // see runDesignQuery: vessels with a mean date within margin years of the selected time will be displayed
   var timeSlider = new Slider({
     container: 'time',
