@@ -22,7 +22,7 @@
   <div id="hideLoading" style="visibility:hidden">
     <div id="rendererSelector" class="esri-widget">
       <!-- Update the height of rendererSelector in main.css if you are going to add more options -->
-      <div class="rendererItem" rendererData="Heatmap">Heatmap</div>
+      <div class="rendererItem" rendererData="Heatmap">Heatmap&nbsp;(slow)</div>
       <div class="rendererItem" rendererData="Dot">Dot</div>
       <div class="rendererItem" rendererData="Cluster">Cluster</div>
     </div>
@@ -33,6 +33,9 @@
       Designs dated between the two thumbs on the slider will be shown on the map.<br>
       <label for="time">Year:</label>
       <div id="time" class="slider"></div>
+      <button class="esri-button" id="query-designs" type="button" style="visibility:collapse; display:none">
+        Query Designs
+      </button>
       <div id="results" class="esri-widget"></div>
     </div>
   </div>

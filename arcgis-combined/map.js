@@ -25,6 +25,7 @@ require([
   SubLayer,
   HeatmapRenderer
 ) {
+
   // TODO: customize the heatmap so that it looks better (change colors)
   // Heatmap
   const heatmap = {
@@ -103,7 +104,6 @@ require([
     ],
   };
 
-  // see runDesignQuery: vessels with a mean date within margin years of the selected time will be displayed
   var timeSlider = new Slider({
     container: 'time',
     min: 400,
@@ -125,7 +125,6 @@ require([
   // designs sites vessels table 3 (fixed mean date column, updated max record count)
   const dataURL = 'https://services5.arcgis.com/yVCUkdcXCabMuIIK/ArcGIS/rest/services/designs_sites_vessels/FeatureServer';
 
-  // contains all the designs, not displayed
   var dataLayer = new FeatureLayer({
     url: dataURL,
     // I (kurtis) added this, thinking maybe it makes mapping a bit faster
@@ -141,6 +140,7 @@ require([
     renderer: uniqueRenderer
   });
 
+  /* Deprecated
   const resultsFields = [
     {
       name: 'ObjectID',
@@ -172,6 +172,13 @@ require([
       type: 'string'
     }
   ];
+  */
+  // Used only for the heatmap
+  var resultsLayer = new FeatureLayer({
+    source: null,
+    ObjectIdField: 'ObjectID',
+    renderer: heatmap
+  });
 
   var map = new Map({
     basemap: 'topo',
@@ -195,8 +202,8 @@ require([
     group: 'top-left'
   });
   view.ui.add(rendererExpand, 'top-left');
-  // Default to cluster rendering
-  var selectedRenderer = 'Cluster';
+  // Default to dot rendering
+  var selectedRenderer = 'Dot';
 
   // Add the opacity slider
   var opacitySlider = new Slider({
@@ -210,7 +217,6 @@ require([
   });
   opacitySlider.on(['click', 'thumb-drag', 'thumb-change'], function(event) {
     dataLayer.opacity = opacitySlider.values[0];
-    if (typeof resultsLayer === 'undefined') return;
     resultsLayer.opacity = opacitySlider.values[0];
   });
 
@@ -233,18 +239,6 @@ require([
   // Remove the hideLoading div when the view is finished loading
   view.when().then(function() {
     document.getElementById('hideLoading').remove();
-  });
-
-  view.whenLayerView(dataLayer).then(function (layerView) {
-    // update the filter every time the user interacts with the timeSlider
-    timeSlider.on(['thumb-drag', 'thumb-change', 'segment-drag'], function timeFilter() {
-      var earlyBound = timeSlider.values[0];
-      var lateBound = timeSlider.values[1];
-      const whereClause = 'mean_date >= ' + earlyBound + ' and mean_date <= ' + lateBound;
-      layerView.filter = {
-        where: whereClause
-      }
-    });
   });
 
   /* Deprecated
@@ -282,30 +276,87 @@ require([
 
   function rendererChangeHandler(event) {
     selectedRenderer = event.target.getAttribute('rendererData');
-    // if the results have not been drawn yet, don't try to update the resultsLayer
-    if (typeof resultsLayer === 'undefined') return;
-    changeRenderer(selectedRenderer);
-  }
-
-  function changeRenderer(str) {
-    switch (str) {
+    var queryButton = document.getElementById('query-designs');
+    switch (selectedRenderer) {
       case 'Dot':
-        removeClustering();
-        resultsLayer.renderer = uniqueRenderer;
-        break;
-      case 'Heatmap':
-        removeClustering();
-        resultsLayer.renderer = heatmap;
+        removeClustering(dataLayer);
+        resultsLayer.visible = false;
+        dataLayer.visible = true;
+        queryButton.style.visibility = 'hidden';
+        queryButton.style.display = 'none';
         break;
       case 'Cluster':
-        resultsLayer.renderer = uniqueRenderer;
-        applyClustering();
+        applyClustering(dataLayer);
+        resultsLayer.visible = false;
+        dataLayer.visible = true;
+        queryButton.style.visibility = 'hidden';
+        queryButton.style.display = 'none';
+        break;
+      case 'Heatmap':
+        dataLayer.visible = false;
+        resultsLayer.visible = true;
+        queryButton.style.visibility = 'visible';
+        queryButton.style.display = 'flex';
+        updateHeatmap();
         break;
     }
   }
 
-  function applyClustering() {
-    resultsLayer.featureReduction = {
+  // Update handler for the time slider
+  view.whenLayerView(dataLayer).then(function (layerView) {
+    // FIXME: the first time the page loads I think this executes too quickly and it says "Displaying 0 Designs" although it is actually displaying many more. 
+    updateLayerView(layerView);
+    // update the filter/heatmap every time the user interacts with the timeSlider
+    timeSlider.on(['thumb-drag', 'thumb-change', 'segment-drag'], function timeFilter() {
+      if (selectedRenderer === 'Heatmap') {
+        return;
+        // this is really laggy, just update on clicking the query designs button
+        //updateHeatmap();
+      } else {
+        //Update dot/cluster map
+        updateLayerView(layerView);
+      }
+    });
+  });
+
+  function updateLayerView(layerView) {
+    var earlyBound = timeSlider.values[0];
+    var lateBound = timeSlider.values[1];
+    const whereClause = 'mean_date >= ' + earlyBound + ' and mean_date <= ' + lateBound;
+    layerView.filter = {
+      where: whereClause
+    }
+    layerView.queryFeatureCount().then(function(count) {
+      updateDesignCount(count);
+    })
+  }
+
+  // Update handler for the query designs button
+  var queryDesigns = document.getElementById('query-designs');
+  queryDesigns.addEventListener('click', function() {
+    if (selectedRenderer === 'Heatmap')
+      updateHeatmap();
+  });
+
+  function updateHeatmap() {
+    var query = dataLayer.createQuery();
+    var earlyBound = timeSlider.values[0];
+    var lateBound = timeSlider.values[1];
+    query.where = 'mean_date >= ' + earlyBound + ' and mean_date <= ' + lateBound;
+    dataLayer.queryFeatures(query).then(function(results) {
+      updateDesignCount(results.features.length);
+      map.layers.remove(resultsLayer);
+      resultsLayer = new FeatureLayer({
+        source: results.features,
+        objectIdField: 'ObjectID',
+        renderer: heatmap
+      })
+      map.layers.add(resultsLayer);
+    });
+  }
+
+  function applyClustering(layer) {
+    layer.featureReduction = {
       type: 'cluster',
       popupTemplate: {
         content:
@@ -333,7 +384,13 @@ require([
     };
   }
 
-  function removeClustering() {
-    resultsLayer.featureReduction = null;
+  function removeClustering(layer) {
+    layer.featureReduction = null;
   }
+
+  // update the html element saying how many designs the map is showing
+  function updateDesignCount(count) {
+    document.getElementById('results').innerHTML = 'Displaying ' + count + ' designs.';
+  }
+
 });
