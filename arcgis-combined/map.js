@@ -109,7 +109,7 @@ require([
     min: 400,
     max: 1700,
     steps: 25,
-    values: [1000, 1100],
+    values: [400, 1700],
     visibleElements: {
       labels: true,
       rangeLabels: true,
@@ -209,6 +209,7 @@ require([
     }
   });
   opacitySlider.on(['click', 'thumb-drag', 'thumb-change'], function(event) {
+    dataLayer.opacity = opacitySlider.values[0];
     if (typeof resultsLayer === 'undefined') return;
     resultsLayer.opacity = opacitySlider.values[0];
   });
@@ -235,9 +236,8 @@ require([
   });
 
   view.whenLayerView(dataLayer).then(function (layerView) {
-    // query for designs with the specified time when the query button is clicked
-    var queryDesigns = document.getElementById('query-designs');
-    queryDesigns.addEventListener('click', function () {
+    // update the filter every time the user interacts with the timeSlider
+    timeSlider.on(['thumb-drag', 'thumb-change', 'segment-drag'], function timeFilter() {
       var earlyBound = timeSlider.values[0];
       var lateBound = timeSlider.values[1];
       const whereClause = 'mean_date >= ' + earlyBound + ' and mean_date <= ' + lateBound;
