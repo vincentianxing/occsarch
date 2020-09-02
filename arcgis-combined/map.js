@@ -138,7 +138,7 @@ require([
       'sym_struc',
       'sym_design',
     ],
-    visible: false,
+    renderer: uniqueRenderer
   });
 
   const resultsFields = [
@@ -175,6 +175,7 @@ require([
 
   var map = new Map({
     basemap: 'topo',
+    layers: [dataLayer]
   });
 
   // setting up various UI elements
@@ -233,12 +234,20 @@ require([
     document.getElementById('hideLoading').remove();
   });
 
-  // query for designs with the specified time when the query button is clicked
-  var queryDesigns = document.getElementById('query-designs');
-  queryDesigns.addEventListener('click', function () {
-    runDesignQuery().then(displayResults);
+  view.whenLayerView(dataLayer).then(function (layerView) {
+    // query for designs with the specified time when the query button is clicked
+    var queryDesigns = document.getElementById('query-designs');
+    queryDesigns.addEventListener('click', function () {
+      var earlyBound = timeSlider.values[0];
+      var lateBound = timeSlider.values[1];
+      const whereClause = 'mean_date >= ' + earlyBound + ' and mean_date <= ' + lateBound;
+      layerView.filter = {
+        where: whereClause
+      }
+    });
   });
 
+  /* Deprecated
   function runDesignQuery() {
     var query = dataLayer.createQuery();
 
@@ -269,6 +278,7 @@ require([
     map.layers.removeAll();
     map.layers.add(resultsLayer);
   }
+  */
 
   function rendererChangeHandler(event) {
     selectedRenderer = event.target.getAttribute('rendererData');
