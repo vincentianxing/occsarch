@@ -48,9 +48,6 @@ require([
     minPixelIntensity: 0,
   };
 
-  // FIXME: all points are just showing as white, not sure why
-  // It's not a problem with limiting the outFields; this bug still occurs with that part commented out
-
   // Unique-value map (dot and cluster renderers)
   /* According to ArcGIS, these are the top 10 most common sym_struc values and the number of times they occur in the database
 		p112	4262
