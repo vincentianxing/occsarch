@@ -126,8 +126,7 @@ require([
   // designs sites vessels table 2 (dorothy sent updated data)
   //const dataURL = 'https://services5.arcgis.com/L1mg0iSh5ckmKwdF/arcgis/rest/services/d_s_v/FeatureServer';
   // designs sites vessels table 3 (fixed mean date column, updated max record count)
-  const dataURL =
-    'https://services5.arcgis.com/yVCUkdcXCabMuIIK/ArcGIS/rest/services/designs_sites_vessels/FeatureServer';
+  const dataURL = 'https://services5.arcgis.com/yVCUkdcXCabMuIIK/ArcGIS/rest/services/designs_sites_vessels/FeatureServer';
 
   // contains all the designs, not displayed
   var dataLayer = new FeatureLayer({
@@ -137,8 +136,6 @@ require([
     outFields: [
       'site_name',
       'Elevation',
-      'earliest_date',
-      'latest_date',
       'mean_date',
       'color',
       'sym_struc',
@@ -146,6 +143,38 @@ require([
     ],
     visible: false,
   });
+
+  const resultsFields = [
+    {
+      name: 'ObjectID',
+      alias: 'ObjectID',
+      type: 'oid'
+    }, {
+      name: 'site_name',
+      alias: 'Site Name',
+      type: 'string'
+    }, {
+      name: 'Elevation',
+      alias: 'Elevation',
+      type: 'integer'
+    }, {
+      name: 'mean_date',
+      alias: 'Date',
+      type: 'integer'
+    }, {
+      name: 'color',
+      alias: 'Color',
+      type: 'string'
+    }, {
+      name: 'sym_struc',
+      alias: 'Symmetry Structure',
+      type: 'string'
+    }, {
+      name: 'sym_design',
+      alias: 'Symmetry Design',
+      type: 'string'
+    }
+  ];
 
   var map = new Map({
     basemap: 'topo',
@@ -235,7 +264,7 @@ require([
     //create a new layer with the results
     resultsLayer = new FeatureLayer({
       source: results.features,
-      objectIdField: 'ObjectID',
+      fields: resultsFields
     });
     changeRenderer(selectedRenderer);
 
@@ -268,7 +297,6 @@ require([
     }
   }
 
-  // FIXME: sometimes the clusters won't appear after a query, or the number on each bubble won't show up. Rerunning the query without switching the renderer fixes it.
   function applyClustering() {
     resultsLayer.featureReduction = {
       type: 'cluster',
