@@ -67,42 +67,76 @@ require([
     field: 'sym_struc',
     defaultSymbol: { type: 'simple-marker', size: 6, color: 'white' },
     // legendOptions: { title: 'Legend', view: view },
-    uniqueValueInfos: [
-      {
-        value: 'pmm2',
-        symbol: { type: 'simple-marker', size: 6, color: 'red' },
-      },
-      {
-        value: 'p111',
-        symbol: { type: 'simple-marker', size: 6, color: 'orange' },
-      },
-      {
-        value: 'p112',
-        symbol: { type: 'simple-marker', size: 6, color: 'pink' },
-      },
-      {
-        value: 'C1',
-        symbol: { type: 'simple-marker', size: 6, color: 'yellow' },
-      },
-      {
-        value: 'C2',
-        symbol: { type: 'simple-marker', size: 6, color: 'green' },
-      },
-      {
-        value: 'D1',
-        symbol: { type: 'simple-marker', size: 6, color: 'blue' },
-      },
-      {
-        value: 'D2',
-        symbol: { type: 'simple-marker', size: 6, color: 'mediumorchid' },
-      },
-      {
-        value: 'asym',
-        symbol: { type: 'simple-marker', size: 6, color: 'gray' },
-        label: 'asym',
-      },
-    ],
   };
+  // a constant array of common symmetries that will be colored by default
+  const symmetries = [
+    'p112',
+    'pmm2',
+    'C2',
+    'p111',
+    'pma2',
+    'C4',
+    'D2',
+    'D1',
+    'C1',
+    'D4',
+    'p2',
+    'pm11',
+    'p1a1',
+    'C3',
+    'pmg',
+    'p4m',
+    'asym',
+    'p1m1',
+    'pmm',
+    'cmm',
+    'pgg',
+    'p1m1',
+    'cmm',
+  ]
+  // an array of colors that will be used to color points when filtering by symmetry
+  const colors = [
+    'red',
+    'yellow',
+    'green',
+    'aqua',
+    'gray',
+    'olive',
+    'mistyrose',
+    'teal',
+    'lightcoral',
+    'blue',
+    'pink',
+    'maroon',
+    'fuchsia',
+    'lime',
+    'navy',
+    'purple',
+    'orange',
+    'darkmagenta',
+    'darkgreen',
+    'darkkhaki',
+    'darkolivegreen',
+    'greenyellow',
+    'indigo',
+    'lightgreen',
+    'midnightblue',
+    'saddlebrown'
+  ];
+
+  // resets a layer's uniqueRenderer to an initial state
+  function resetColoring(layer) {
+    if (layer.renderer.type !== 'unique-value')
+      return; 
+    var arr = [];
+    for (var i = 0; i < Math.min(symmetries.length, colors.length); i++) {
+      arr.push({
+        value: symmetries[i],
+        symbol: {type: 'simple-marker', size: 6, color: colors[i]}
+      });
+    }
+    layer.renderer.uniqueValueInfos = arr;
+  }
 
   var symRadios = document.getElementsByName('sym-field');
   var symField = 'sym_struc';
@@ -144,6 +178,7 @@ require([
     ],
     renderer: uniqueRenderer
   });
+  resetColoring(dataLayer);
 
   /* Deprecated
   const resultsFields = [
@@ -415,18 +450,35 @@ require([
     if (!selectedSymmetries.some(function (s) {
       return s === 'All'
     })) {
+      var newColoring = [];
       whereClause += ' and (1 = 0 '; // just to avoid trying to remove the 'or' on i = 0
+
+      // update coloring, SQL query for each selected symmetry
       for (var i = 0; i < selectedSymmetries.length; i++) {
         var sym = selectedSymmetries[i];
+
+        // render each unique symmetry in a new color
+        newColoring.push({
+          value: sym,
+          symbol: { type: 'simple-marker', size: 6, color: colors[i] },
+          label: sym,
+        });
+
         // if sym contains an apostrophe (single quote),
         // add in an additional apostrophe to escape it in the SQL query
         var apostrophe = sym.indexOf('\'');
         if (apostrophe > -1) {
           sym = sym.substring(0, apostrophe) + '\'' + sym.substring(apostrophe);
         }
+
         whereClause += ' or ' + symField + ' = \'' + sym + '\'';
       }
       whereClause += ')';
+      // update coloring
+      dataLayer.renderer.uniqueValueInfos = newColoring;
+
+    } else {
+      resetColoring(dataLayer);
     }
     layerView.filter = {
       where: whereClause
