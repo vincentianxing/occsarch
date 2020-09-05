@@ -104,11 +104,10 @@ require([
     ],
   };
 
-  // TODO: implement this as a select multiple
   var symRadios = document.getElementsByName('sym-field');
   var symField = 'sym_struc';
   var symmetrySelect = document.getElementById('symmetry-type');
-  var selectedSymmetry = 'All';
+  var selectedSymmetries = ['All'];
 
   var timeSlider = new Slider({
     container: 'time',
@@ -384,7 +383,12 @@ require([
     });
     // update the filter when the user selects a symmetry filter
     symmetrySelect.addEventListener('change', function() {
-      selectedSymmetry = event.target.value;
+      selectedSymmetries = [];
+      for (var i = 0; i < symmetrySelect.options.length; i++) {
+        if (symmetrySelect.options[i].selected) {
+          selectedSymmetries.push(symmetrySelect.options[i].text);
+        }
+      }
       updateLayerView(layerView);
     })
     // update the filter when the user changes the symmetry field
@@ -405,17 +409,24 @@ require([
     var earlyBound = timeSlider.values[0];
     var lateBound = timeSlider.values[1];
     var whereClause = 'mean_date >= ' + earlyBound + ' and mean_date <= ' + lateBound;
-    // match where symField is equal 
-    // to the selected symmetry in the filter drop down
-    if (selectedSymmetry !== 'All') {
-      var sym = selectedSymmetry;
-      // if selectedSymmetry contains an apostrophe (single quote),
-      // add in an additional apostrophe to escape it in the SQL query
-      var apostrophe = sym.indexOf('\'');
-      if (apostrophe > -1) {
-        sym = sym.substring(0, apostrophe) + '\'' + sym.substring(apostrophe);
+    // match where symField is equal to any of 
+    // the selected symmetries in the filter drop down
+    // if selectedSymmetries does not contain 'All'
+    if (!selectedSymmetries.some(function (s) {
+      return s === 'All'
+    })) {
+      whereClause += ' and (1 = 0 '; // just to avoid trying to remove the 'or' on i = 0
+      for (var i = 0; i < selectedSymmetries.length; i++) {
+        var sym = selectedSymmetries[i];
+        // if sym contains an apostrophe (single quote),
+        // add in an additional apostrophe to escape it in the SQL query
+        var apostrophe = sym.indexOf('\'');
+        if (apostrophe > -1) {
+          sym = sym.substring(0, apostrophe) + '\'' + sym.substring(apostrophe);
+        }
+        whereClause += ' or ' + symField + ' = \'' + sym + '\'';
       }
-      whereClause += ' and ' + symField + ' = \'' + sym + '\'';
+      whereClause += ')';
     }
     layerView.filter = {
       where: whereClause
