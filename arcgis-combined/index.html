@@ -29,7 +29,11 @@
     <div id="infoDiv" class="esri-widget">
       <label for="opacity">Opacity</label>
       <div id="opacity" class="slider"></div>
-      <i>TODO: implement toggle between sym_struc and sym_design</i><br>
+      <div id="sym-toggle">
+        <b>Symmetry Field:</b><br>
+        <input type="radio" name="sym-field" value="sym_design">Symmetry Design</input>
+        <input type="radio" name="sym-field" value="sym_struc" checked="checked">Symmetry Structure</input>
+      </div>
       <div id="drop-down">
         <b>Filter by Symmetry Type:</b><br>
         <select id="symmetry-type" class="esri-widget">

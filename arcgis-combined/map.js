@@ -104,8 +104,8 @@ require([
     ],
   };
 
-  // TODO: add option to select between sym_struc and sym_design
   // TODO: implement this as a select multiple
+  var symRadios = document.getElementsByName('sym-field');
   var symField = 'sym_struc';
   var symmetrySelect = document.getElementById('symmetry-type');
   var selectedSymmetry = 'All';
@@ -387,6 +387,17 @@ require([
       selectedSymmetry = event.target.value;
       updateLayerView(layerView);
     })
+    // update the filter when the user changes the symmetry field
+    symRadios.forEach(function(obj) {
+      obj.addEventListener('change', function() {
+        symField = event.target.value;
+        // small bug: the layerView displays new points before the 
+        // renderer applies the color change. 
+        // This just results in a slight flicker of the colors
+        dataLayer.renderer.field = event.target.value;
+        updateLayerView(layerView);
+      });
+    });
   });
 
   function updateLayerView(layerView) {
@@ -394,7 +405,7 @@ require([
     var earlyBound = timeSlider.values[0];
     var lateBound = timeSlider.values[1];
     var whereClause = 'mean_date >= ' + earlyBound + ' and mean_date <= ' + lateBound;
-    // match where the either sym_struc or sym_design is equal 
+    // match where symField is equal 
     // to the selected symmetry in the filter drop down
     if (selectedSymmetry !== 'All') {
       var sym = selectedSymmetry;
