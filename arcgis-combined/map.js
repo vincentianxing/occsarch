@@ -104,6 +104,12 @@ require([
     ],
   };
 
+  // TODO: add option to select between sym_struc and sym_design
+  // TODO: implement this as a select multiple
+  var symField = 'sym_struc';
+  var symmetrySelect = document.getElementById('symmetry-type');
+  var selectedSymmetry = 'All';
+
   var timeSlider = new Slider({
     container: 'time',
     min: 400,
@@ -236,10 +242,69 @@ require([
 
   view.ui.add('infoDiv', 'bottom-right');
 
-  // Remove the hideLoading div when the view is finished loading
-  view.when().then(function() {
+  // query all features from the dataLayer
+  view.when(function() {
+    return dataLayer.when(function () {
+      var query = dataLayer.createQuery();
+      return dataLayer.queryFeatures(query);
+    });
+  })
+  .then(getValues)
+  .then(getUniqueValues)
+  .then(addToSymFilter)
+  .then(function() {
     document.getElementById('hideLoading').remove();
   });
+
+  // copied from the documentation, modified with switch statement
+  // return an array of all the values in the
+  // STATUS2 field of the wells layer
+  function getValues(response) {
+    var features = response.features;
+    var values;
+    switch(symField) {
+      case 'sym_struc':
+        values = features.map(function(feature) {
+          return feature.attributes.sym_struc;
+        });
+        break;
+      case 'sym_design':
+        values = features.map(function(feature) {
+          return feature.attributes.sym_design;
+        })
+        break;
+      default:
+        console.error(symField + 'is not a valid symmetry field');
+        break;
+    }
+    return values;
+  }
+
+  // copied from the documentation
+  // return an array of unique values in
+  // the STATUS2 field of the wells layer
+  function getUniqueValues(values) {
+    var uniqueValues = [];
+    values.forEach(function (item, i) {
+      if (
+        (uniqueValues.length < 1 || uniqueValues.indexOf(item) === -1) &&
+        item !== ""
+      ) {
+        uniqueValues.push(item);
+      }
+    });
+    return uniqueValues;
+  }
+
+  // add all distinct symmetries to the filter drop down
+  function addToSymFilter(values) {
+    values.sort();
+    values.forEach(function (value) {
+      var option = document.createElement("option");
+      option.text = value;
+      symmetrySelect.add(option);
+    });
+  }
 
   /* Deprecated
   function runDesignQuery() {
@@ -317,12 +382,30 @@ require([
         updateLayerView(layerView);
       }
     });
+    // update the filter when the user selects a symmetry filter
+    symmetrySelect.addEventListener('change', function() {
+      selectedSymmetry = event.target.value;
+      updateLayerView(layerView);
+    })
   });
 
   function updateLayerView(layerView) {
+    // select where the date is between the temporal bounds
     var earlyBound = timeSlider.values[0];
     var lateBound = timeSlider.values[1];
-    const whereClause = 'mean_date >= ' + earlyBound + ' and mean_date <= ' + lateBound;
+    var whereClause = 'mean_date >= ' + earlyBound + ' and mean_date <= ' + lateBound;
+    // match where the either sym_struc or sym_design is equal 
+    // to the selected symmetry in the filter drop down
+    if (selectedSymmetry !== 'All') {
+      var sym = selectedSymmetry;
+      // if selectedSymmetry contains an apostrophe (single quote),
+      // add in an additional apostrophe to escape it in the SQL query
+      var apostrophe = sym.indexOf('\'');
+      if (apostrophe > -1) {
+        sym = sym.substring(0, apostrophe) + '\'' + sym.substring(apostrophe);
+      }
+      whereClause += ' and ' + symField + ' = \'' + sym + '\'';
+    }
     layerView.filter = {
       where: whereClause
     }
