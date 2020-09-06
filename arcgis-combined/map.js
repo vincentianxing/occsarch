@@ -201,39 +201,6 @@ require([
     renderer: uniqueRenderer
   });
 
-  /* Deprecated
-  const resultsFields = [
-    {
-      name: 'ObjectID',
-      alias: 'ObjectID',
-      type: 'oid'
-    }, {
-      name: 'site_name',
-      alias: 'Site Name',
-      type: 'string'
-    }, {
-      name: 'Elevation',
-      alias: 'Elevation',
-      type: 'integer'
-    }, {
-      name: 'mean_date',
-      alias: 'Date',
-      type: 'integer'
-    }, {
-      name: 'color',
-      alias: 'Color',
-      type: 'string'
-    }, {
-      name: 'sym_struc',
-      alias: 'Symmetry Structure',
-      type: 'string'
-    }, {
-      name: 'sym_design',
-      alias: 'Symmetry Design',
-      type: 'string'
-    }
-  ];
-  */
   // Used only for the heatmap
   var resultsLayer = new FeatureLayer({
     source: null,
@@ -246,12 +213,11 @@ require([
     layers: [dataLayer]
   });
 
-  // setting up various UI elements
   var view = new MapView({
     container: 'viewDiv',
     map: map,
-    center: [-112, 36],
-    zoom: 6,
+    center: [-108, 35.3],
+    zoom: 7,
   });
 
   // Add the renderer selector
@@ -262,7 +228,6 @@ require([
     content: renderersElement,
     group: 'top-left'
   });
-  view.ui.add(rendererExpand, 'top-left');
   // Default to dot rendering
   var selectedRenderer = 'Dot';
 
@@ -292,7 +257,6 @@ require([
       },
     },
   });
-	view.ui.add(basemapGallery, 'top-right');
 	*/
 
   const legend = new Legend({
@@ -304,15 +268,10 @@ require([
     }]
   });
 
-  // arcGIS updates the legend on most things, 
-  // but not when you change a the data in a renderer of a layer,
-  // so we have to do it manually
-  function updateLegend() {
-    console.log("Updating Legend...");
-    emptyLayer.opacity += 1;
-  }
-
+  // setting up various UI elements
+  view.ui.add(rendererExpand, 'top-left');
   view.ui.add(legend, 'top-right');
+  // view.ui.add(basemapGallery, 'top-right');
   view.ui.add('infoDiv', 'bottom-right');
 
   // query all features from the dataLayer
@@ -379,39 +338,6 @@ require([
       symmetrySelect.add(option);
     });
   }
-
-  /* Deprecated
-  function runDesignQuery() {
-    var query = dataLayer.createQuery();
-
-    var earlyBound = timeSlider.values[0];
-    var lateBound = timeSlider.values[1];
-    query.where = 'mean_date >= ' + earlyBound + ' and mean_date <= ' + lateBound;
-
-    // alternate method of querying the database to select only rows such that the selected time falls in between the estimated dates
-    //query.where = "earliest_date <= " + selectedTime + " and latest_date >= " + selectedTime;
-
-    return dataLayer.queryFeatures(query);
-  }
-
-  function displayResults(results) {
-    //update the slider, reporting how many vessels found
-    var numDesigns = results.features.length;
-    document.getElementById('results').innerHTML =
-      numDesigns + ' designs found';
-
-    //create a new layer with the results
-    resultsLayer = new FeatureLayer({
-      source: results.features,
-      fields: resultsFields
-    });
-    changeRenderer(selectedRenderer);
-
-    //update the map with the new layer
-    map.layers.removeAll();
-    map.layers.add(resultsLayer);
-  }
-  */
 
   function rendererChangeHandler(event) {
     selectedRenderer = event.target.getAttribute('rendererData');
