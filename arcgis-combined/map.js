@@ -139,6 +139,9 @@ require([
     }
     layer.renderer = uniqueRenderer;
     layer.renderer.uniqueValueInfos = arr;
+    // not sure why this fixes it, but without it, the clusters just stay white
+    if (selectedRenderer === 'Cluster')
+      applyClustering(dataLayer);
   }
 
   var symRadios = document.getElementsByName('sym-field');
@@ -294,6 +297,7 @@ require([
 
   const legend = new Legend({
     view: view,
+    container: 'legendDiv',
     layerInfos: [{
       layer: dataLayer,
       title: 'Legend'

@@ -8,7 +8,11 @@ body,
 }
 
 #infoDiv {
-	width: 600px;
+	width: 400px;
+}
+
+#legendDiv {
+	width: 170px;
 }
 
 #rendererSelector {
