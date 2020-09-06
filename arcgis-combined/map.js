@@ -6,6 +6,7 @@ require([
   'esri/widgets/BasemapGallery',
   'esri/widgets/Slider',
   'esri/widgets/Expand',
+  'esri/widgets/Legend',
   'esri/layers/TileLayer',
   'esri/layers/MapImageLayer',
   'esri/layers/FeatureLayer',
@@ -19,6 +20,7 @@ require([
   BasemapGallery,
   Slider,
   Expand,
+  Legend,
   TileLayer,
   MapImageLayer,
   FeatureLayer,
@@ -66,7 +68,7 @@ require([
     type: 'unique-value',
     field: 'sym_struc',
     defaultSymbol: { type: 'simple-marker', size: 6, color: 'white' },
-    // legendOptions: { title: 'Legend', view: view },
+    legendOptions: { title: 'Symmetry' }
   };
   // a constant array of common symmetries that will be colored by default
   const symmetries = [
@@ -135,6 +137,7 @@ require([
         symbol: {type: 'simple-marker', size: 6, color: colors[i]}
       });
     }
+    layer.renderer = uniqueRenderer;
     layer.renderer.uniqueValueInfos = arr;
   }
 
@@ -176,9 +179,24 @@ require([
       'sym_struc',
       'sym_design',
     ],
+    popupTemplate: {
+      // TODO: what do we title each design? By site name? or by id?
+      title: 'Title',
+      content: [{
+        type: 'fields',
+        fieldInfos: [
+          {fieldName: 'site_name'},
+          {fieldName: 'Elevation'},
+          {fieldName: 'mean_date'},
+          {fieldName: 'color'},
+          {fieldName: 'sym_struc'},
+          {fieldName: 'sym_design'},
+        ]
+      }]
+    },
+    legendEnabled: true,
     renderer: uniqueRenderer
   });
-  resetColoring(dataLayer);
 
   /* Deprecated
   const resultsFields = [
@@ -274,6 +292,23 @@ require([
 	view.ui.add(basemapGallery, 'top-right');
 	*/
 
+  const legend = new Legend({
+    view: view,
+    layerInfos: [{
+      layer: dataLayer,
+      title: 'Legend'
+    }]
+  });
+
+  // arcGIS updates the legend on most things, 
+  // but not when you change a the data in a renderer of a layer,
+  // so we have to do it manually
+  function updateLegend() {
+    console.log("Updating Legend...");
+    emptyLayer.opacity += 1;
+  }
+
+  view.ui.add(legend, 'top-right');
   view.ui.add('infoDiv', 'bottom-right');
 
   // query all features from the dataLayer
@@ -288,6 +323,7 @@ require([
   .then(addToSymFilter)
   .then(function() {
     document.getElementById('hideLoading').remove();
+    resetColoring(dataLayer);
   });
 
   // copied from the documentation, modified with switch statement
@@ -475,7 +511,11 @@ require([
       }
       whereClause += ')';
       // update coloring
+      dataLayer.renderer = uniqueRenderer;
       dataLayer.renderer.uniqueValueInfos = newColoring;
+      // not sure why this fixes it, but without it, the clusters just stay white
+      if (selectedRenderer === 'Cluster')
+        applyClustering(dataLayer);
 
     } else {
       resetColoring(dataLayer);
