@@ -175,6 +175,7 @@ require([
     // I (kurtis) added this, thinking maybe it makes mapping a bit faster
     // outFields configured for designs sites vessels table 3
     outFields: [
+      'site_ID',
       'site_name',
       'Elevation',
       'mean_date',
@@ -188,6 +189,7 @@ require([
       content: [{
         type: 'fields',
         fieldInfos: [
+          {fieldName: 'site_ID'},
           {fieldName: 'site_name'},
           {fieldName: 'Elevation'},
           {fieldName: 'mean_date'},
