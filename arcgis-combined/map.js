@@ -1,31 +1,31 @@
 require([
   'esri/Map',
   'esri/views/MapView',
-  'esri/Basemap',
-  'esri/widgets/BasemapToggle',
   'esri/widgets/BasemapGallery',
   'esri/widgets/Slider',
   'esri/widgets/Expand',
   'esri/widgets/Legend',
-  'esri/layers/TileLayer',
-  'esri/layers/MapImageLayer',
   'esri/layers/FeatureLayer',
-  'esri/layers/support/Sublayer',
-  'esri/renderers/HeatmapRenderer',
+  'esri/layers/GraphicsLayer',
+  'esri/core/watchUtils',
+  'esri/widgets/Sketch/SketchViewModel',
+  'esri/geometry/Polyline',
+  'esri/geometry/geometryEngine',
+  'esri/Graphic',
 ], function (
   Map,
   MapView,
-  Basemap,
-  BasemapToggle,
   BasemapGallery,
   Slider,
   Expand,
   Legend,
-  TileLayer,
-  MapImageLayer,
   FeatureLayer,
-  SubLayer,
-  HeatmapRenderer
+  GraphicsLayer,
+  watchUtils,
+  SketchViewModel,
+  Polyline,
+  geometryEngine,
+  Graphic,
 ) {
 
   // TODO: customize the heatmap so that it looks better (change colors)
@@ -52,18 +52,6 @@ require([
   };
 
   // Unique-value map (dot and cluster renderers)
-  /* According to ArcGIS, these are the top 10 most common sym_struc values and the number of times they occur in the database
-		p112	4262
-		pmm2	2366
-		C2	1922
-		p111	1179
-		pma2	1013
-		C4	863
-		D1	831
-		D2	801
-		C1	772
-		D4	598
-	*/
   const uniqueRenderer = {
     type: 'unique-value',
     field: 'sym_struc',
@@ -203,6 +191,15 @@ require([
     renderer: uniqueRenderer
   });
 
+  // used for selection area for frequency graph
+  var centerGraphic,
+  edgeGraphic,
+  polylineGraphic,
+  bufferGraphic,
+  centerGeometryAtStart,
+  labelGraphic;
+const unit = 'kilometers';
+
   // Used only for the heatmap
   var resultsLayer = new FeatureLayer({
     source: null,
@@ -210,9 +207,14 @@ require([
     renderer: heatmap
   });
 
+  var graphicsLayer = new GraphicsLayer();
+  var bufferLayer = new GraphicsLayer({
+    blendMode: 'color-burn'
+  });
+
   var map = new Map({
     basemap: 'topo',
-    layers: [dataLayer]
+    layers: [dataLayer, bufferLayer, graphicsLayer]
   });
 
   var view = new MapView({
@@ -221,6 +223,8 @@ require([
     center: [-108, 35.3],
     zoom: 7,
   });
+
+  var featureLayerView;
 
   // Add the renderer selector
   const renderersElement = document.getElementById('rendererSelector');
@@ -270,11 +274,20 @@ require([
     }]
   });
 
+  var chartExpand = new Expand({
+    expandIconClass: "esri-icon-chart",
+    expandTooltip: "Symmetry Frequency Chart",
+    expanded: false,
+    view: view,
+    content: document.getElementById("chartPanel")
+  })
+
   // setting up various UI elements
   view.ui.add(rendererExpand, 'top-left');
   view.ui.add(legend, 'top-right');
   // view.ui.add(basemapGallery, 'top-right');
   view.ui.add('infoDiv', 'bottom-right');
+  view.ui.add(chartExpand, 'bottom-left');
 
   // query all features from the dataLayer
   view.when(function() {
@@ -371,6 +384,7 @@ require([
 
   // Update handler for the time slider
   view.whenLayerView(dataLayer).then(function (layerView) {
+    featureLayerView = layerView;
     // FIXME: the first time the page loads I think this executes too quickly and it says "Displaying 0 Designs" although it is actually displaying many more. 
     updateLayerView(layerView);
     // update the filter/heatmap every time the user interacts with the timeSlider
@@ -405,7 +419,360 @@ require([
         updateLayerView(layerView);
       });
     });
+
+    // create a watcher to trigger drawing of the buffer (selection area) polygon
+    pausableWatchHandle = watchUtils.pausable(
+      layerView,
+      'updating',
+      function (val) {
+        if (!val) {
+          drawBufferPolygon();
+        }
+      }
+    );
+
+    // Display directions when the layerView is loading
+    watchUtils.whenFalseOnce(layerView, "updating", function () {
+      view.popup.open({
+        title: "Center point",
+        content:
+          "Drag this point to move the buffer.<br/> " +
+          "Or drag the <b>Edge</b> point to resize the buffer.",
+        location: centerGraphic.geometry
+      });
+      view.popup.alignment = "top-left";
+    });
+
+    // close the popup when the user clicks out of it
+    view.watch('focused', function(newValue) {
+      if (newValue) {
+        view.popup.close();
+      }
+    });
   });
+
+  setUpSketch();
+
+  // Create SketchViewModel and wire up event listeners
+  function setUpSketch() {
+    sketchViewModel = new SketchViewModel({
+      view: view,
+      layer: graphicsLayer
+    });
+
+    // Listen to SketchViewModel's update event so the symmetry frequency chart
+    // is updated as the graphics are updated
+    sketchViewModel.on("update", onMove);
+  }
+
+
+  // Edge or center graphics are being moved. Recalculate the buffer with
+  // updated geometry information and run the query stats again.
+  function onMove(event) {
+    // If the edge graphic is moving, keep the center graphic
+    // at its initial location. Only move edge graphic
+    if (
+      event.toolEventInfo &&
+      event.toolEventInfo.mover.attributes.edge
+    ) {
+      const toolType = event.toolEventInfo.type;
+      if (toolType === "move-start") {
+        centerGeometryAtStart = centerGraphic.geometry;
+      }
+      // keep the center graphic at its initial location when edge point is moving
+      else if (toolType === "move" || toolType === "move-stop") {
+        centerGraphic.geometry = centerGeometryAtStart;
+      }
+    }
+
+    // the center or edge graphic is being moved, recalculate the buffer
+    const vertices = [
+      [centerGraphic.geometry.x, centerGraphic.geometry.y],
+      [edgeGraphic.geometry.x, edgeGraphic.geometry.y]
+    ];
+
+    // client-side stats query of features that intersect the buffer
+    calculateBuffer(vertices);
+
+    // user is clicking on the view... call update method with the center and edge graphics
+    if (event.state === "complete") {
+      sketchViewModel.update([edgeGraphic, centerGraphic], {
+        tool: "move"
+      });
+    }
+  }
+
+  function calculateBuffer(vertices) {
+    // Update the geometry of the polyline based on location of edge and center points
+    polylineGraphic.geometry = new Polyline({
+      paths: vertices,
+      spatialReference: view.spatialReference
+    });
+
+    // Recalculate the polyline length and buffer polygon
+    const length = geometryEngine.geodesicLength(
+      polylineGraphic.geometry,
+      unit
+    );
+    const buffer = geometryEngine.geodesicBuffer(
+      centerGraphic.geometry,
+      length,
+      unit
+    );
+
+    // Update the buffer polygon
+    bufferGraphic.geometry = buffer;
+
+    // Query symmetry frequency of features that intersect the buffer polygon
+    queryLayerViewSymStats(buffer).then(function (newData) {
+      // Create a frequency chart from the returned result
+      updateChart(newData);
+    });
+
+    // Update label graphic to show the length of the polyline
+    labelGraphic.geometry = edgeGraphic.geometry;
+    labelGraphic.symbol = {
+      type: "text",
+      color: "#000000",
+      text: length.toFixed(2) + " kilometers",
+      xoffset: 50,
+      yoffset: 10,
+      font: {
+        // autocast as Font
+        size: 14,
+        family: "sans-serif"
+      }
+    };
+  }
+
+  //TODO some part of this code makes the whole layer under it slightly whiter, except for the part inside the circle. I haven't figured out what causes this yet (but it is intentional).
+  // draw the buffer polygon when the view loads
+  function drawBufferPolygon() {
+    // When pause() is called on the watch handle, the callback represented by the
+    // watch is no longer invoked, but is still available for later use
+    // this watch handle will be resumed when user searches for a new location
+    pausableWatchHandle.pause();
+
+    // Initial location for the center, edge and polylines on the view
+    const viewCenter = view.center.clone();
+    const centerScreenPoint = view.toScreen(viewCenter);
+    const centerPoint = view.toMap({
+      x: centerScreenPoint.x + 120,
+      y: centerScreenPoint.y - 120
+    });
+    const edgePoint = view.toMap({
+      x: centerScreenPoint.x + 240,
+      y: centerScreenPoint.y - 120
+    });
+
+    // Store updated vertices
+    const vertices = [
+      [centerPoint.x, centerPoint.y],
+      [edgePoint.x, edgePoint.y]
+    ];
+
+    // Create center, edge, polyline and buffer graphics for the first time
+    if (!centerGraphic) {
+      const polyline = new Polyline({
+        paths: vertices,
+        spatialReference: view.spatialReference
+      });
+
+      // get the length of the initial polyline and create buffer
+      const length = geometryEngine.geodesicLength(polyline, unit);
+      const buffer = geometryEngine.geodesicBuffer(
+        centerPoint,
+        length,
+        unit
+      );
+
+      // Create the graphics representing the line and buffer
+      const pointSymbol = {
+        type: "simple-marker",
+        style: "circle",
+        size: 10,
+        color: [0, 255, 255, 0.5]
+      };
+      centerGraphic = new Graphic({
+        geometry: centerPoint,
+        symbol: pointSymbol,
+        attributes: {
+          center: "center"
+        }
+      });
+
+      edgeGraphic = new Graphic({
+        geometry: edgePoint,
+        symbol: pointSymbol,
+        attributes: {
+          edge: "edge"
+        }
+      });
+
+      polylineGraphic = new Graphic({
+        geometry: polyline,
+        symbol: {
+          type: "simple-line",
+          color: [254, 254, 254, 1],
+          width: 2.5
+        }
+      });
+
+      bufferGraphic = new Graphic({
+        geometry: buffer,
+        symbol: {
+          type: "simple-fill",
+          color: [150, 150, 150],
+          outline: {
+            color: "#000000",
+            width: 2
+          }
+        }
+      });
+      labelGraphic = labelLength(edgePoint, length);
+
+      // Add graphics to layer
+      graphicsLayer.addMany([
+        centerGraphic,
+        edgeGraphic,
+        polylineGraphic,
+        labelGraphic
+      ]);
+      // once center and edge point graphics are added to the layer,
+      // call sketch's update method pass in the graphics so that users
+      // can just drag these graphics to adjust the buffer
+      setTimeout(function () {
+        sketchViewModel.update([edgeGraphic, centerGraphic], {
+          tool: "move"
+        });
+      }, 1000);
+
+      bufferLayer.addMany([bufferGraphic]);
+    }
+    // Move the center and edge graphics to the new location returned from search
+    else {
+      centerGraphic.geometry = centerPoint;
+      edgeGraphic.geometry = edgePoint;
+    }
+
+    // Query features that intersect the buffer
+    calculateBuffer(vertices);
+  }
+
+  // Label polyline with its length
+  function labelLength(geom, length) {
+    return new Graphic({
+      geometry: geom,
+      symbol: {
+        type: "text",
+        color: "#000000",
+        text: length.toFixed(2) + " kilometers",
+        xoffset: 50,
+        yoffset: 10,
+        font: {
+          // autocast as Font
+          size: 14,
+          family: "sans-serif"
+        }
+      }
+    });
+  }
+
+  // spatially query the feature layer view for statistics using the updated buffer polygon
+  function queryLayerViewSymStats(buffer) {
+    // Data storage for the chart
+    let syms = [];
+    let counts = [];
+
+    // Client-side spatial query:
+    // Get a sum of age groups for census tracts that intersect the polygon buffer
+    const query = featureLayerView.layer.createQuery();
+    //TODO: take into account selected symmetries filter and time filter when drawing graph
+    //TODO: order by symField_TOTAL descending
+    query.groupByFieldsForStatistics = symField;
+    query.outStatistics = {
+      onStatisticField: symField,
+      outStatisticFieldName: symField + "_TOTAL",
+      statisticType: "count"
+    };
+    query.geometry = buffer;
+
+    // Query the features on the client using FeatureLayerView.queryFeatures
+    return featureLayerView
+      .queryFeatures(query)
+      .then(function (results) {
+        // Loop through attributes and save the values for use in the frequency chart
+        for (var graphic of results.features) {
+          row = graphic.attributes;
+          for (var property in row) {
+            if (property.includes('TOTAL')) {
+              counts.push(row[property]);
+            } else {
+              syms.push(row[property]);
+            }
+          }
+        }
+        return [syms, counts];
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  // Create an population pyramid chart for the census tracts that intersect the buffer polygon
+  // Chart is created using the Chart.js library
+  var chart;
+  function updateChart(newData) {
+    var syms = newData[0];
+    var counts = newData[1];
+
+    chartExpand.expanded = true;
+
+    // TODO: improve chart formatting
+    if (!chart) {
+      // Get the canvas element and render the chart in it
+      const canvasElement = document.getElementById('chart');
+
+      chart = new Chart(canvasElement.getContext("2d"), {
+        type: 'bar',
+        data: {
+          labels: syms,
+          datasets: [{
+            label: 'Occurences',
+            data: counts,
+            backgroundColor: 'rgba(0, 0, 0, 0.4)'
+          }]
+        },
+        options: {
+          responsive: false,
+          title: {
+            display: true,
+            text: 'Symmetry Occurences'
+          },
+          scales: {
+            xAxes: [{
+              autoSkip: false
+            }],
+            yAxes: [{
+              min: 0,
+              scaleLabel: {
+                display: true,
+                labelString: 'Occurences'
+              }
+            }],
+          },
+          animation: {
+            duration: 0
+          },
+          responsiveAnimationDuration: 0
+        }
+      });
+    } else {
+      chart.data.labels = syms;
+      chart.data.datasets[0].data = counts;
+      chart.update();
+    }
+  }
 
   function updateLayerView(layerView) {
     // select where the date is between the temporal bounds
