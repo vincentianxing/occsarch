@@ -544,7 +544,7 @@ const unit = 'kilometers';
       }
     };
   }
-  
+
   // draw the buffer polygon when the view loads
   function drawBufferPolygon() {
     // When pause() is called on the watch handle, the callback represented by the
@@ -687,13 +687,13 @@ const unit = 'kilometers';
     // Get a sum of age groups for census tracts that intersect the polygon buffer
     const query = featureLayerView.layer.createQuery();
     //TODO: take into account selected symmetries filter and time filter when drawing graph
-    //TODO: order by symField_TOTAL descending
     query.groupByFieldsForStatistics = symField;
     query.outStatistics = {
       onStatisticField: symField,
       outStatisticFieldName: symField + "_TOTAL",
       statisticType: "count"
     };
+    query.orderByFields = [symField + "_TOTAL DESC"];
     query.geometry = buffer;
 
     // Query the features on the client using FeatureLayerView.queryFeatures
