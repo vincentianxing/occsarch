@@ -544,8 +544,7 @@ const unit = 'kilometers';
       }
     };
   }
-
-  //TODO some part of this code makes the whole layer under it slightly whiter, except for the part inside the circle. I haven't figured out what causes this yet (but it is intentional).
+  
   // draw the buffer polygon when the view loads
   function drawBufferPolygon() {
     // When pause() is called on the watch handle, the callback represented by the
