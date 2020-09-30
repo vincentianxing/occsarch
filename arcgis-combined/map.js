@@ -396,6 +396,9 @@ const unit = 'kilometers';
       } else {
         //Update dot/cluster map
         updateLayerView(layerView);
+        queryLayerViewSymStats(bufferGraphic.geometry).then(function (newData) {
+          updateChart(newData);
+        });
       }
     });
     // update the filter when the user selects a symmetry filter
@@ -407,6 +410,9 @@ const unit = 'kilometers';
         }
       }
       updateLayerView(layerView);
+      queryLayerViewSymStats(bufferGraphic.geometry).then(function (newData) {
+        updateChart(newData);
+      });
     })
     // update the filter when the user changes the symmetry field
     symRadios.forEach(function(obj) {
@@ -417,6 +423,9 @@ const unit = 'kilometers';
         // This just results in a slight flicker of the colors
         dataLayer.renderer.field = event.target.value;
         updateLayerView(layerView);
+        queryLayerViewSymStats(bufferGraphic.geometry).then(function (newData) {
+          updateChart(newData);
+        });
       });
     });
 
@@ -687,6 +696,7 @@ const unit = 'kilometers';
     // Get a sum of age groups for census tracts that intersect the polygon buffer
     const query = featureLayerView.layer.createQuery();
     //TODO: take into account selected symmetries filter and time filter when drawing graph
+    query.where = getWhereClause();
     query.groupByFieldsForStatistics = symField;
     query.outStatistics = {
       onStatisticField: symField,
@@ -824,6 +834,34 @@ const unit = 'kilometers';
     layerView.queryFeatureCount().then(function(count) {
       updateDesignCount(count);
     })
+  }
+
+  function getWhereClause() {
+    // select where the date is between the temporal bounds
+    var earlyBound = timeSlider.values[0];
+    var lateBound = timeSlider.values[1];
+    var whereClause = 'mean_date >= ' + earlyBound + ' and mean_date <= ' + lateBound;
+    // match where symField is equal to any of 
+    // the selected symmetries in the filter drop down
+    // if selectedSymmetries does not contain 'All'
+    if (!selectedSymmetries.includes('All')) {
+      var newColoring = [];
+      whereClause += ' and (1 = 0 '; // just to avoid trying to remove the 'or' on i = 0
+
+      // update coloring, SQL query for each selected symmetry
+      for (var i = 0; i < selectedSymmetries.length; i++) {
+        var sym = selectedSymmetries[i];
+        // if sym contains an apostrophe (single quote),
+        // add in an additional apostrophe to escape it in the SQL query
+        var apostrophe = sym.indexOf('\'');
+        if (apostrophe > -1) {
+          sym = sym.substring(0, apostrophe) + '\'' + sym.substring(apostrophe);
+        }
+        whereClause += ' or ' + symField + ' = \'' + sym + '\'';
+      }
+      whereClause += ')';
+    }
+    return whereClause;
   }
 
   // Update handler for the query designs button
