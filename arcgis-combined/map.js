@@ -248,8 +248,10 @@ const unit = 'kilometers';
     }
   });
   opacitySlider.on(['click', 'thumb-drag', 'thumb-change'], function(event) {
-    dataLayer.opacity = opacitySlider.values[0];
-    resultsLayer.opacity = opacitySlider.values[0];
+    var opacity = opacitySlider.values[0];
+    dataLayer.opacity = opacity;
+    resultsLayer.opacity = opacity;
+    bufferLayer.opacity = opacity;
   });
 
   // Add a default basemap selecting widget
