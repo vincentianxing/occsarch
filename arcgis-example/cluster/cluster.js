@@ -140,9 +140,16 @@ require([
     ],
   };
 
+  var custom_basemap = new Basemap({
+    portalItem: {
+      id: '4837420847a14d32a367ad0ad1e8658d',
+      // The map is currently set to public; for now, all zooming factors are acceptable, which means the visibility range is at max
+    },
+  });
+
   var map = new Map({
     // basemap: 'gray-vector',
-    basemap: 'topo',
+    basemap: custom_basemap,
     layers: [dataLayer],
   });
 

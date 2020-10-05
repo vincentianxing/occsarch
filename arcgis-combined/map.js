@@ -12,6 +12,8 @@ require([
   'esri/geometry/Polyline',
   'esri/geometry/geometryEngine',
   'esri/Graphic',
+  'esri/portal/PortalItem',
+  'esri/Basemap',
 ], function (
   Map,
   MapView,
@@ -26,8 +28,9 @@ require([
   Polyline,
   geometryEngine,
   Graphic,
+  PortalItem,
+  Basemap
 ) {
-
   // TODO: customize the heatmap so that it looks better (change colors)
   // Heatmap
   const heatmap = {
@@ -56,8 +59,10 @@ require([
     type: 'unique-value',
     field: 'sym_struc',
     defaultSymbol: { type: 'simple-marker', size: 6, color: 'white' },
-    legendOptions: { title: 'Symmetry' }
+    legendOptions: { title: 'Symmetry' },
   };
+
+  // TODO: auto generate colors - Vincent
   // a constant array of common symmetries that will be colored by default
   const symmetries = [
     'p112',
@@ -83,7 +88,7 @@ require([
     'pgg',
     'p1m1',
     'cmm',
-  ]
+  ];
   // an array of colors that will be used to color points when filtering by symmetry
   const colors = [
     'red',
@@ -111,25 +116,23 @@ require([
     'indigo',
     'lightgreen',
     'midnightblue',
-    'saddlebrown'
+    'saddlebrown',
   ];
 
   // resets a layer's uniqueRenderer to an initial state
   function resetColoring(layer) {
-    if (layer.renderer.type !== 'unique-value')
-      return; 
+    if (layer.renderer.type !== 'unique-value') return;
     var arr = [];
     for (var i = 0; i < Math.min(symmetries.length, colors.length); i++) {
       arr.push({
         value: symmetries[i],
-        symbol: {type: 'simple-marker', size: 6, color: colors[i]}
+        symbol: { type: 'simple-marker', size: 6, color: colors[i] },
       });
     }
     layer.renderer = uniqueRenderer;
     layer.renderer.uniqueValueInfos = arr;
     // not sure why this fixes it, but without it, the clusters just stay white
-    if (selectedRenderer === 'Cluster')
-      applyClustering(dataLayer);
+    if (selectedRenderer === 'Cluster') applyClustering(dataLayer);
   }
 
   var symRadios = document.getElementsByName('sym-field');
@@ -146,7 +149,7 @@ require([
     visibleElements: {
       labels: true,
       rangeLabels: true,
-    }
+    },
   });
 
   // latlon sites test data (sites only)
@@ -156,7 +159,8 @@ require([
   // designs sites vessels table 2 (dorothy sent updated data)
   //const dataURL = 'https://services5.arcgis.com/L1mg0iSh5ckmKwdF/arcgis/rest/services/d_s_v/FeatureServer';
   // designs sites vessels table 3 (fixed mean date column, updated max record count)
-  const dataURL = 'https://services5.arcgis.com/yVCUkdcXCabMuIIK/ArcGIS/rest/services/designs_sites_vessels/FeatureServer';
+  const dataURL =
+    'https://services5.arcgis.com/yVCUkdcXCabMuIIK/ArcGIS/rest/services/designs_sites_vessels/FeatureServer';
 
   var dataLayer = new FeatureLayer({
     url: dataURL,
@@ -174,47 +178,57 @@ require([
     popupTemplate: {
       // TODO: what do we title each design? By site name? or by id?
       title: 'Title',
-      content: [{
-        type: 'fields',
-        fieldInfos: [
-          {fieldName: 'site_ID'},
-          {fieldName: 'site_name'},
-          {fieldName: 'Elevation'},
-          {fieldName: 'mean_date'},
-          {fieldName: 'color'},
-          {fieldName: 'sym_struc'},
-          {fieldName: 'sym_design'},
-        ]
-      }]
+      content: [
+        {
+          type: 'fields',
+          fieldInfos: [
+            { fieldName: 'site_ID' },
+            { fieldName: 'site_name' },
+            { fieldName: 'Elevation' },
+            { fieldName: 'mean_date' },
+            { fieldName: 'color' },
+            { fieldName: 'sym_struc' },
+            { fieldName: 'sym_design' },
+          ],
+        },
+      ],
     },
     legendEnabled: true,
-    renderer: uniqueRenderer
+    renderer: uniqueRenderer,
   });
 
   // used for selection area for frequency graph
   var centerGraphic,
-  edgeGraphic,
-  polylineGraphic,
-  bufferGraphic,
-  centerGeometryAtStart,
-  labelGraphic;
-const unit = 'kilometers';
+    edgeGraphic,
+    polylineGraphic,
+    bufferGraphic,
+    centerGeometryAtStart,
+    labelGraphic;
+  const unit = 'kilometers';
 
   // Used only for the heatmap
   var resultsLayer = new FeatureLayer({
     source: null,
     ObjectIdField: 'ObjectID',
-    renderer: heatmap
+    renderer: heatmap,
   });
 
   var graphicsLayer = new GraphicsLayer();
   var bufferLayer = new GraphicsLayer({
-    blendMode: 'color-burn'
+    blendMode: 'color-burn',
+  });
+
+  // Create basemap from the custom map
+  var custom_basemap = new Basemap({
+    portalItem: {
+      id: '4837420847a14d32a367ad0ad1e8658d',
+      // The map is currently set to public; for now, all zooming factors are acceptable, which means the visibility range is at max
+    },
   });
 
   var map = new Map({
-    basemap: 'topo',
-    layers: [dataLayer, bufferLayer, graphicsLayer]
+    basemap: custom_basemap, // befor we used "topo"
+    layers: [dataLayer, bufferLayer, graphicsLayer],
   });
 
   var view = new MapView({
@@ -232,7 +246,7 @@ const unit = 'kilometers';
   const rendererExpand = new Expand({
     view: view,
     content: renderersElement,
-    group: 'top-left'
+    group: 'top-left',
   });
   // Default to dot rendering
   var selectedRenderer = 'Dot';
@@ -244,10 +258,10 @@ const unit = 'kilometers';
     max: 1,
     values: [1],
     visibleElements: {
-      rangeLabels: true
-    }
+      rangeLabels: true,
+    },
   });
-  opacitySlider.on(['click', 'thumb-drag', 'thumb-change'], function(event) {
+  opacitySlider.on(['click', 'thumb-drag', 'thumb-change'], function (event) {
     var opacity = opacitySlider.values[0];
     dataLayer.opacity = opacity;
     resultsLayer.opacity = opacity;
@@ -270,19 +284,21 @@ const unit = 'kilometers';
   const legend = new Legend({
     view: view,
     container: 'legendDiv',
-    layerInfos: [{
-      layer: dataLayer,
-      title: 'Legend'
-    }]
+    layerInfos: [
+      {
+        layer: dataLayer,
+        title: 'Legend',
+      },
+    ],
   });
 
   var chartExpand = new Expand({
-    expandIconClass: "esri-icon-chart",
-    expandTooltip: "Symmetry Frequency Chart",
+    expandIconClass: 'esri-icon-chart',
+    expandTooltip: 'Symmetry Frequency Chart',
     expanded: false,
     view: view,
-    content: document.getElementById("chartPanel")
-  })
+    content: document.getElementById('chartPanel'),
+  });
 
   // setting up various UI elements
   view.ui.add(rendererExpand, 'top-left');
@@ -292,19 +308,20 @@ const unit = 'kilometers';
   view.ui.add(chartExpand, 'bottom-left');
 
   // query all features from the dataLayer
-  view.when(function() {
-    return dataLayer.when(function () {
-      var query = dataLayer.createQuery();
-      return dataLayer.queryFeatures(query);
+  view
+    .when(function () {
+      return dataLayer.when(function () {
+        var query = dataLayer.createQuery();
+        return dataLayer.queryFeatures(query);
+      });
+    })
+    .then(getValues)
+    .then(getUniqueValues)
+    .then(addToSymFilter)
+    .then(function () {
+      document.getElementById('hideLoading').remove();
+      resetColoring(dataLayer);
     });
-  })
-  .then(getValues)
-  .then(getUniqueValues)
-  .then(addToSymFilter)
-  .then(function() {
-    document.getElementById('hideLoading').remove();
-    resetColoring(dataLayer);
-  });
 
   // copied from the documentation, modified with switch statement
   // return an array of all the values in the
@@ -312,16 +329,16 @@ const unit = 'kilometers';
   function getValues(response) {
     var features = response.features;
     var values;
-    switch(symField) {
+    switch (symField) {
       case 'sym_struc':
-        values = features.map(function(feature) {
+        values = features.map(function (feature) {
           return feature.attributes.sym_struc;
         });
         break;
       case 'sym_design':
-        values = features.map(function(feature) {
+        values = features.map(function (feature) {
           return feature.attributes.sym_design;
-        })
+        });
         break;
       default:
         console.error(symField + 'is not a valid symmetry field');
@@ -338,7 +355,7 @@ const unit = 'kilometers';
     values.forEach(function (item, i) {
       if (
         (uniqueValues.length < 1 || uniqueValues.indexOf(item) === -1) &&
-        item !== ""
+        item !== ''
       ) {
         uniqueValues.push(item);
       }
@@ -350,7 +367,7 @@ const unit = 'kilometers';
   function addToSymFilter(values) {
     values.sort();
     values.forEach(function (value) {
-      var option = document.createElement("option");
+      var option = document.createElement('option');
       option.text = value;
       symmetrySelect.add(option);
     });
@@ -387,24 +404,29 @@ const unit = 'kilometers';
   // Update handler for the time slider
   view.whenLayerView(dataLayer).then(function (layerView) {
     featureLayerView = layerView;
-    // FIXME: the first time the page loads I think this executes too quickly and it says "Displaying 0 Designs" although it is actually displaying many more. 
+    // FIXME: the first time the page loads I think this executes too quickly and it says "Displaying 0 Designs" although it is actually displaying many more.
     updateLayerView(layerView);
     // update the filter/heatmap every time the user interacts with the timeSlider
-    timeSlider.on(['thumb-drag', 'thumb-change', 'segment-drag'], function timeFilter() {
-      if (selectedRenderer === 'Heatmap') {
-        return;
-        // this is really laggy, just update on clicking the query designs button
-        //updateHeatmap();
-      } else {
-        //Update dot/cluster map
-        updateLayerView(layerView);
-        queryLayerViewSymStats(bufferGraphic.geometry).then(function (newData) {
-          updateChart(newData);
-        });
+    timeSlider.on(
+      ['thumb-drag', 'thumb-change', 'segment-drag'],
+      function timeFilter() {
+        if (selectedRenderer === 'Heatmap') {
+          return;
+          // this is really laggy, just update on clicking the query designs button
+          //updateHeatmap();
+        } else {
+          //Update dot/cluster map
+          updateLayerView(layerView);
+          queryLayerViewSymStats(bufferGraphic.geometry).then(function (
+            newData
+          ) {
+            updateChart(newData);
+          });
+        }
       }
-    });
+    );
     // update the filter when the user selects a symmetry filter
-    symmetrySelect.addEventListener('change', function() {
+    symmetrySelect.addEventListener('change', function () {
       selectedSymmetries = [];
       for (var i = 0; i < symmetrySelect.options.length; i++) {
         if (symmetrySelect.options[i].selected) {
@@ -415,13 +437,13 @@ const unit = 'kilometers';
       queryLayerViewSymStats(bufferGraphic.geometry).then(function (newData) {
         updateChart(newData);
       });
-    })
+    });
     // update the filter when the user changes the symmetry field
-    symRadios.forEach(function(obj) {
-      obj.addEventListener('change', function() {
+    symRadios.forEach(function (obj) {
+      obj.addEventListener('change', function () {
         symField = event.target.value;
-        // small bug: the layerView displays new points before the 
-        // renderer applies the color change. 
+        // small bug: the layerView displays new points before the
+        // renderer applies the color change.
         // This just results in a slight flicker of the colors
         dataLayer.renderer.field = event.target.value;
         updateLayerView(layerView);
@@ -432,30 +454,28 @@ const unit = 'kilometers';
     });
 
     // create a watcher to trigger drawing of the buffer (selection area) polygon
-    pausableWatchHandle = watchUtils.pausable(
-      layerView,
-      'updating',
-      function (val) {
-        if (!val) {
-          drawBufferPolygon();
-        }
+    pausableWatchHandle = watchUtils.pausable(layerView, 'updating', function (
+      val
+    ) {
+      if (!val) {
+        drawBufferPolygon();
       }
-    );
+    });
 
     // Display directions when the layerView is loading
-    watchUtils.whenFalseOnce(layerView, "updating", function () {
+    watchUtils.whenFalseOnce(layerView, 'updating', function () {
       view.popup.open({
-        title: "Center point",
+        title: 'Center point',
         content:
-          "Drag this point to move the buffer.<br/> " +
-          "Or drag the <b>Edge</b> point to resize the buffer.",
-        location: centerGraphic.geometry
+          'Drag this point to move the buffer.<br/> ' +
+          'Or drag the <b>Edge</b> point to resize the buffer.',
+        location: centerGraphic.geometry,
       });
-      view.popup.alignment = "top-left";
+      view.popup.alignment = 'top-left';
     });
 
     // close the popup when the user clicks out of it
-    view.watch('focused', function(newValue) {
+    view.watch('focused', function (newValue) {
       if (newValue) {
         view.popup.close();
       }
@@ -468,30 +488,26 @@ const unit = 'kilometers';
   function setUpSketch() {
     sketchViewModel = new SketchViewModel({
       view: view,
-      layer: graphicsLayer
+      layer: graphicsLayer,
     });
 
     // Listen to SketchViewModel's update event so the symmetry frequency chart
     // is updated as the graphics are updated
-    sketchViewModel.on("update", onMove);
+    sketchViewModel.on('update', onMove);
   }
-
 
   // Edge or center graphics are being moved. Recalculate the buffer with
   // updated geometry information and run the query stats again.
   function onMove(event) {
     // If the edge graphic is moving, keep the center graphic
     // at its initial location. Only move edge graphic
-    if (
-      event.toolEventInfo &&
-      event.toolEventInfo.mover.attributes.edge
-    ) {
+    if (event.toolEventInfo && event.toolEventInfo.mover.attributes.edge) {
       const toolType = event.toolEventInfo.type;
-      if (toolType === "move-start") {
+      if (toolType === 'move-start') {
         centerGeometryAtStart = centerGraphic.geometry;
       }
       // keep the center graphic at its initial location when edge point is moving
-      else if (toolType === "move" || toolType === "move-stop") {
+      else if (toolType === 'move' || toolType === 'move-stop') {
         centerGraphic.geometry = centerGeometryAtStart;
       }
     }
@@ -499,16 +515,16 @@ const unit = 'kilometers';
     // the center or edge graphic is being moved, recalculate the buffer
     const vertices = [
       [centerGraphic.geometry.x, centerGraphic.geometry.y],
-      [edgeGraphic.geometry.x, edgeGraphic.geometry.y]
+      [edgeGraphic.geometry.x, edgeGraphic.geometry.y],
     ];
 
     // client-side stats query of features that intersect the buffer
     calculateBuffer(vertices);
 
     // user is clicking on the view... call update method with the center and edge graphics
-    if (event.state === "complete") {
+    if (event.state === 'complete') {
       sketchViewModel.update([edgeGraphic, centerGraphic], {
-        tool: "move"
+        tool: 'move',
       });
     }
   }
@@ -517,7 +533,7 @@ const unit = 'kilometers';
     // Update the geometry of the polyline based on location of edge and center points
     polylineGraphic.geometry = new Polyline({
       paths: vertices,
-      spatialReference: view.spatialReference
+      spatialReference: view.spatialReference,
     });
 
     // Recalculate the polyline length and buffer polygon
@@ -543,16 +559,16 @@ const unit = 'kilometers';
     // Update label graphic to show the length of the polyline
     labelGraphic.geometry = edgeGraphic.geometry;
     labelGraphic.symbol = {
-      type: "text",
-      color: "#000000",
-      text: length.toFixed(2) + " kilometers",
+      type: 'text',
+      color: '#000000',
+      text: length.toFixed(2) + ' kilometers',
       xoffset: 50,
       yoffset: 10,
       font: {
         // autocast as Font
         size: 14,
-        family: "sans-serif"
-      }
+        family: 'sans-serif',
+      },
     };
   }
 
@@ -568,76 +584,72 @@ const unit = 'kilometers';
     const centerScreenPoint = view.toScreen(viewCenter);
     const centerPoint = view.toMap({
       x: centerScreenPoint.x + 120,
-      y: centerScreenPoint.y - 120
+      y: centerScreenPoint.y - 120,
     });
     const edgePoint = view.toMap({
       x: centerScreenPoint.x + 240,
-      y: centerScreenPoint.y - 120
+      y: centerScreenPoint.y - 120,
     });
 
     // Store updated vertices
     const vertices = [
       [centerPoint.x, centerPoint.y],
-      [edgePoint.x, edgePoint.y]
+      [edgePoint.x, edgePoint.y],
     ];
 
     // Create center, edge, polyline and buffer graphics for the first time
     if (!centerGraphic) {
       const polyline = new Polyline({
         paths: vertices,
-        spatialReference: view.spatialReference
+        spatialReference: view.spatialReference,
       });
 
       // get the length of the initial polyline and create buffer
       const length = geometryEngine.geodesicLength(polyline, unit);
-      const buffer = geometryEngine.geodesicBuffer(
-        centerPoint,
-        length,
-        unit
-      );
+      const buffer = geometryEngine.geodesicBuffer(centerPoint, length, unit);
 
       // Create the graphics representing the line and buffer
       const pointSymbol = {
-        type: "simple-marker",
-        style: "circle",
+        type: 'simple-marker',
+        style: 'circle',
         size: 10,
-        color: [0, 255, 255, 0.5]
+        color: [0, 255, 255, 0.5],
       };
       centerGraphic = new Graphic({
         geometry: centerPoint,
         symbol: pointSymbol,
         attributes: {
-          center: "center"
-        }
+          center: 'center',
+        },
       });
 
       edgeGraphic = new Graphic({
         geometry: edgePoint,
         symbol: pointSymbol,
         attributes: {
-          edge: "edge"
-        }
+          edge: 'edge',
+        },
       });
 
       polylineGraphic = new Graphic({
         geometry: polyline,
         symbol: {
-          type: "simple-line",
+          type: 'simple-line',
           color: [254, 254, 254, 1],
-          width: 2.5
-        }
+          width: 2.5,
+        },
       });
 
       bufferGraphic = new Graphic({
         geometry: buffer,
         symbol: {
-          type: "simple-fill",
+          type: 'simple-fill',
           color: [150, 150, 150],
           outline: {
-            color: "#000000",
-            width: 2
-          }
-        }
+            color: '#000000',
+            width: 2,
+          },
+        },
       });
       labelGraphic = labelLength(edgePoint, length);
 
@@ -646,14 +658,14 @@ const unit = 'kilometers';
         centerGraphic,
         edgeGraphic,
         polylineGraphic,
-        labelGraphic
+        labelGraphic,
       ]);
       // once center and edge point graphics are added to the layer,
       // call sketch's update method pass in the graphics so that users
       // can just drag these graphics to adjust the buffer
       setTimeout(function () {
         sketchViewModel.update([edgeGraphic, centerGraphic], {
-          tool: "move"
+          tool: 'move',
         });
       }, 1000);
 
@@ -674,17 +686,17 @@ const unit = 'kilometers';
     return new Graphic({
       geometry: geom,
       symbol: {
-        type: "text",
-        color: "#000000",
-        text: length.toFixed(2) + " kilometers",
+        type: 'text',
+        color: '#000000',
+        text: length.toFixed(2) + ' kilometers',
         xoffset: 50,
         yoffset: 10,
         font: {
           // autocast as Font
           size: 14,
-          family: "sans-serif"
-        }
-      }
+          family: 'sans-serif',
+        },
+      },
     });
   }
 
@@ -702,10 +714,10 @@ const unit = 'kilometers';
     query.groupByFieldsForStatistics = symField;
     query.outStatistics = {
       onStatisticField: symField,
-      outStatisticFieldName: symField + "_TOTAL",
-      statisticType: "count"
+      outStatisticFieldName: symField + '_TOTAL',
+      statisticType: 'count',
     };
-    query.orderByFields = [symField + "_TOTAL DESC"];
+    query.orderByFields = [symField + '_TOTAL DESC'];
     query.geometry = buffer;
 
     // Query the features on the client using FeatureLayerView.queryFeatures
@@ -744,39 +756,45 @@ const unit = 'kilometers';
       // Get the canvas element and render the chart in it
       const canvasElement = document.getElementById('chart');
 
-      chart = new Chart(canvasElement.getContext("2d"), {
+      chart = new Chart(canvasElement.getContext('2d'), {
         type: 'bar',
         data: {
           labels: syms,
-          datasets: [{
-            label: 'Occurences',
-            data: counts,
-            backgroundColor: 'rgba(0, 0, 0, 0.4)'
-          }]
+          datasets: [
+            {
+              label: 'Occurences',
+              data: counts,
+              backgroundColor: 'rgba(0, 0, 0, 0.4)',
+            },
+          ],
         },
         options: {
           responsive: false,
           title: {
             display: true,
-            text: 'Symmetry Occurences'
+            text: 'Symmetry Occurences',
           },
           scales: {
-            xAxes: [{
-              autoSkip: false
-            }],
-            yAxes: [{
-              min: 0,
-              scaleLabel: {
-                display: true,
-                labelString: 'Occurences'
-              }
-            }],
+            xAxes: [
+              {
+                autoSkip: false,
+              },
+            ],
+            yAxes: [
+              {
+                min: 0,
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Occurences',
+                },
+              },
+            ],
           },
           animation: {
-            duration: 0
+            duration: 0,
           },
-          responsiveAnimationDuration: 0
-        }
+          responsiveAnimationDuration: 0,
+        },
       });
     } else {
       chart.data.labels = syms;
@@ -789,13 +807,16 @@ const unit = 'kilometers';
     // select where the date is between the temporal bounds
     var earlyBound = timeSlider.values[0];
     var lateBound = timeSlider.values[1];
-    var whereClause = 'mean_date >= ' + earlyBound + ' and mean_date <= ' + lateBound;
-    // match where symField is equal to any of 
+    var whereClause =
+      'mean_date >= ' + earlyBound + ' and mean_date <= ' + lateBound;
+    // match where symField is equal to any of
     // the selected symmetries in the filter drop down
     // if selectedSymmetries does not contain 'All'
-    if (!selectedSymmetries.some(function (s) {
-      return s === 'All'
-    })) {
+    if (
+      !selectedSymmetries.some(function (s) {
+        return s === 'All';
+      })
+    ) {
       var newColoring = [];
       whereClause += ' and (1 = 0 '; // just to avoid trying to remove the 'or' on i = 0
 
@@ -812,38 +833,37 @@ const unit = 'kilometers';
 
         // if sym contains an apostrophe (single quote),
         // add in an additional apostrophe to escape it in the SQL query
-        var apostrophe = sym.indexOf('\'');
+        var apostrophe = sym.indexOf("'");
         if (apostrophe > -1) {
-          sym = sym.substring(0, apostrophe) + '\'' + sym.substring(apostrophe);
+          sym = sym.substring(0, apostrophe) + "'" + sym.substring(apostrophe);
         }
 
-        whereClause += ' or ' + symField + ' = \'' + sym + '\'';
+        whereClause += ' or ' + symField + " = '" + sym + "'";
       }
       whereClause += ')';
       // update coloring
       dataLayer.renderer = uniqueRenderer;
       dataLayer.renderer.uniqueValueInfos = newColoring;
       // not sure why this fixes it, but without it, the clusters just stay white
-      if (selectedRenderer === 'Cluster')
-        applyClustering(dataLayer);
-
+      if (selectedRenderer === 'Cluster') applyClustering(dataLayer);
     } else {
       resetColoring(dataLayer);
     }
     layerView.filter = {
-      where: whereClause
-    }
-    layerView.queryFeatureCount().then(function(count) {
+      where: whereClause,
+    };
+    layerView.queryFeatureCount().then(function (count) {
       updateDesignCount(count);
-    })
+    });
   }
 
   function getWhereClause() {
     // select where the date is between the temporal bounds
     var earlyBound = timeSlider.values[0];
     var lateBound = timeSlider.values[1];
-    var whereClause = 'mean_date >= ' + earlyBound + ' and mean_date <= ' + lateBound;
-    // match where symField is equal to any of 
+    var whereClause =
+      'mean_date >= ' + earlyBound + ' and mean_date <= ' + lateBound;
+    // match where symField is equal to any of
     // the selected symmetries in the filter drop down
     // if selectedSymmetries does not contain 'All'
     if (!selectedSymmetries.includes('All')) {
@@ -855,11 +875,11 @@ const unit = 'kilometers';
         var sym = selectedSymmetries[i];
         // if sym contains an apostrophe (single quote),
         // add in an additional apostrophe to escape it in the SQL query
-        var apostrophe = sym.indexOf('\'');
+        var apostrophe = sym.indexOf("'");
         if (apostrophe > -1) {
-          sym = sym.substring(0, apostrophe) + '\'' + sym.substring(apostrophe);
+          sym = sym.substring(0, apostrophe) + "'" + sym.substring(apostrophe);
         }
-        whereClause += ' or ' + symField + ' = \'' + sym + '\'';
+        whereClause += ' or ' + symField + " = '" + sym + "'";
       }
       whereClause += ')';
     }
@@ -868,24 +888,24 @@ const unit = 'kilometers';
 
   // Update handler for the query designs button
   var queryDesigns = document.getElementById('query-designs');
-  queryDesigns.addEventListener('click', function() {
-    if (selectedRenderer === 'Heatmap')
-      updateHeatmap();
+  queryDesigns.addEventListener('click', function () {
+    if (selectedRenderer === 'Heatmap') updateHeatmap();
   });
 
   function updateHeatmap() {
     var query = dataLayer.createQuery();
     var earlyBound = timeSlider.values[0];
     var lateBound = timeSlider.values[1];
-    query.where = 'mean_date >= ' + earlyBound + ' and mean_date <= ' + lateBound;
-    dataLayer.queryFeatures(query).then(function(results) {
+    query.where =
+      'mean_date >= ' + earlyBound + ' and mean_date <= ' + lateBound;
+    dataLayer.queryFeatures(query).then(function (results) {
       updateDesignCount(results.features.length);
       map.layers.remove(resultsLayer);
       resultsLayer = new FeatureLayer({
         source: results.features,
         objectIdField: 'ObjectID',
-        renderer: heatmap
-      })
+        renderer: heatmap,
+      });
       map.layers.add(resultsLayer);
     });
   }
@@ -925,7 +945,7 @@ const unit = 'kilometers';
 
   // update the html element saying how many designs the map is showing
   function updateDesignCount(count) {
-    document.getElementById('results').innerHTML = 'Displaying ' + count + ' designs.';
+    document.getElementById('results').innerHTML =
+      'Displaying ' + count + ' designs.';
   }
-
 });
