@@ -31,7 +31,7 @@ require([
   PortalItem,
   Basemap
 ) {
-  // TODO: customize the heatmap so that it looks better (change colors)
+  // DEPRECATED
   // Heatmap
   const heatmap = {
     type: 'heatmap',
@@ -145,7 +145,7 @@ require([
     min: 400,
     max: 1700,
     steps: 25,
-    values: [400, 1700],
+    values: [1000],
     visibleElements: {
       labels: true,
       rangeLabels: true,
@@ -170,7 +170,8 @@ require([
       'site_ID',
       'site_name',
       'Elevation',
-      'mean_date',
+      'earliest_date',
+      'latest_date',
       'color',
       'sym_struc',
       'sym_design',
@@ -185,7 +186,8 @@ require([
             { fieldName: 'site_ID' },
             { fieldName: 'site_name' },
             { fieldName: 'Elevation' },
-            { fieldName: 'mean_date' },
+            { fieldName: 'earliest_date' },
+            { fieldName: 'latest_date' },
             { fieldName: 'color' },
             { fieldName: 'sym_struc' },
             { fieldName: 'sym_design' },
@@ -804,43 +806,20 @@ require([
   }
 
   function updateLayerView(layerView) {
-    // select where the date is between the temporal bounds
-    var earlyBound = timeSlider.values[0];
-    var lateBound = timeSlider.values[1];
-    var whereClause =
-      'mean_date >= ' + earlyBound + ' and mean_date <= ' + lateBound;
-    // match where symField is equal to any of
-    // the selected symmetries in the filter drop down
-    // if selectedSymmetries does not contain 'All'
-    if (
-      !selectedSymmetries.some(function (s) {
-        return s === 'All';
-      })
-    ) {
+    var whereClause = getWhereClause();
+    // recolor the symmetries
+    if (!selectedSymmetries.includes('All')) {
       var newColoring = [];
-      whereClause += ' and (1 = 0 '; // just to avoid trying to remove the 'or' on i = 0
-
       // update coloring, SQL query for each selected symmetry
       for (var i = 0; i < selectedSymmetries.length; i++) {
         var sym = selectedSymmetries[i];
-
         // render each unique symmetry in a new color
         newColoring.push({
           value: sym,
           symbol: { type: 'simple-marker', size: 6, color: colors[i] },
           label: sym,
         });
-
-        // if sym contains an apostrophe (single quote),
-        // add in an additional apostrophe to escape it in the SQL query
-        var apostrophe = sym.indexOf("'");
-        if (apostrophe > -1) {
-          sym = sym.substring(0, apostrophe) + "'" + sym.substring(apostrophe);
-        }
-
-        whereClause += ' or ' + symField + " = '" + sym + "'";
       }
-      whereClause += ')';
       // update coloring
       dataLayer.renderer = uniqueRenderer;
       dataLayer.renderer.uniqueValueInfos = newColoring;
@@ -858,19 +837,16 @@ require([
   }
 
   function getWhereClause() {
-    // select where the date is between the temporal bounds
-    var earlyBound = timeSlider.values[0];
-    var lateBound = timeSlider.values[1];
+    // select designs that could have been created in the selected year
+    var timeSelection = timeSlider.values[0];
     var whereClause =
-      'mean_date >= ' + earlyBound + ' and mean_date <= ' + lateBound;
+      'earliest_date <= ' + timeSelection + ' and latest_date >= ' + timeSelection;
     // match where symField is equal to any of
     // the selected symmetries in the filter drop down
-    // if selectedSymmetries does not contain 'All'
     if (!selectedSymmetries.includes('All')) {
-      var newColoring = [];
       whereClause += ' and (1 = 0 '; // just to avoid trying to remove the 'or' on i = 0
 
-      // update coloring, SQL query for each selected symmetry
+      // SQL query for each selected symmetry
       for (var i = 0; i < selectedSymmetries.length; i++) {
         var sym = selectedSymmetries[i];
         // if sym contains an apostrophe (single quote),
