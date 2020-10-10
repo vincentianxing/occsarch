@@ -364,23 +364,23 @@ require([
     }
   }
 
+  function timeFilter() {
+    updateLayerView(featureLayerView);
+    queryLayerViewSymStats(bufferGraphic.geometry).then(function (
+      newData
+    ) {
+      updateChart(newData);
+    });
+  }
+
+  timeSlider.on(['thumb-drag', 'thumb-change', 'segment-drag'], timeFilter);
+  document.getElementById('ignoreTime').addEventListener('change', timeFilter);
+
   // Update handler for the time slider
   view.whenLayerView(dataLayer).then(function (layerView) {
     featureLayerView = layerView;
     // FIXME: the first time the page loads I think this executes too quickly and it says "Displaying 0 Designs" although it is actually displaying many more.
     updateLayerView(layerView);
-    // update the filter every time the user interacts with the timeSlider
-    timeSlider.on(
-      ['thumb-drag', 'thumb-change', 'segment-drag'],
-      function timeFilter() {
-        updateLayerView(layerView);
-        queryLayerViewSymStats(bufferGraphic.geometry).then(function (
-          newData
-        ) {
-          updateChart(newData);
-        });
-      }
-    );
 
     // update the filter when the user selects a symmetry filter
     symmetrySelect.addEventListener('change', function () {
@@ -792,10 +792,12 @@ require([
   }
 
   function getWhereClause() {
-    // select designs that could have been created in the selected year
-    var timeSelection = timeSlider.values[0];
-    var whereClause =
-      'earliest_date <= ' + timeSelection + ' and latest_date >= ' + timeSelection;
+    if (!document.getElementById('ignoreTime').checked) {
+      // select designs that could have been created in the selected year
+      var timeSelection = timeSlider.values[0];
+      var whereClause =
+        'earliest_date <= ' + timeSelection + ' and latest_date >= ' + timeSelection;
+    }
     // match where symField is equal to any of
     // the selected symmetries in the filter drop down
     if (!selectedSymmetries.includes('All')) {

@@ -39,12 +39,11 @@
         </select>
       </div>
       <b>Query by Year:</b><br>
-      Designs dated between the two thumbs on the slider will be shown on the map.<br>
+      Designs that may have been created in the selected year will be shown. Most designs have a large range in when they may have been created.<br>
       <label for="time">Year:</label>
       <div id="time" class="slider"></div>
-      <button class="esri-button" id="query-designs" type="button" style="visibility:collapse; display:none">
-        Query Designs
-      </button>
+      <input type="checkbox" id="ignoreTime">
+      <label for="ignoreTime">Show all designs regardless of year</label>
       <div id="results" class="esri-widget"></div>
     </div>
     <div id="chartPanel"><canvas id="chart" class="chart"></canvas></div>
