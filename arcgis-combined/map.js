@@ -31,29 +31,7 @@ require([
   PortalItem,
   Basemap
 ) {
-  // DEPRECATED
-  // Heatmap
-  const heatmap = {
-    type: 'heatmap',
-    colorStops: [
-      { color: 'rgba(63, 40, 102, 0)', ratio: 0 },
-      { color: '#472b77', ratio: 0.083 },
-      { color: '#4e2d87', ratio: 0.166 },
-      { color: '#563098', ratio: 0.249 },
-      { color: '#5d32a8', ratio: 0.332 },
-      { color: '#6735be', ratio: 0.415 },
-      { color: '#7139d4', ratio: 0.498 },
-      { color: '#7b3ce9', ratio: 0.581 },
-      { color: '#853fff', ratio: 0.664 },
-      { color: '#a46fbf', ratio: 0.747 },
-      { color: '#c29f80', ratio: 0.83 },
-      { color: '#e0cf40', ratio: 0.913 },
-      { color: '#ffff00', ratio: 1 },
-    ],
-    maxPixelIntensity: 25,
-    minPixelIntensity: 0,
-  };
-
+  
   // Unique-value map (dot and cluster renderers)
   const uniqueRenderer = {
     type: 'unique-value',
@@ -208,13 +186,6 @@ require([
     labelGraphic;
   const unit = 'kilometers';
 
-  // Used only for the heatmap
-  var resultsLayer = new FeatureLayer({
-    source: null,
-    ObjectIdField: 'ObjectID',
-    renderer: heatmap,
-  });
-
   var graphicsLayer = new GraphicsLayer();
   var bufferLayer = new GraphicsLayer({
     blendMode: 'color-burn',
@@ -266,7 +237,6 @@ require([
   opacitySlider.on(['click', 'thumb-drag', 'thumb-change'], function (event) {
     var opacity = opacitySlider.values[0];
     dataLayer.opacity = opacity;
-    resultsLayer.opacity = opacity;
     bufferLayer.opacity = opacity;
   });
 
@@ -381,24 +351,15 @@ require([
     switch (selectedRenderer) {
       case 'Dot':
         removeClustering(dataLayer);
-        resultsLayer.visible = false;
         dataLayer.visible = true;
         queryButton.style.visibility = 'hidden';
         queryButton.style.display = 'none';
         break;
       case 'Cluster':
         applyClustering(dataLayer);
-        resultsLayer.visible = false;
         dataLayer.visible = true;
         queryButton.style.visibility = 'hidden';
         queryButton.style.display = 'none';
-        break;
-      case 'Heatmap':
-        dataLayer.visible = false;
-        resultsLayer.visible = true;
-        queryButton.style.visibility = 'visible';
-        queryButton.style.display = 'flex';
-        updateHeatmap();
         break;
     }
   }
@@ -408,25 +369,19 @@ require([
     featureLayerView = layerView;
     // FIXME: the first time the page loads I think this executes too quickly and it says "Displaying 0 Designs" although it is actually displaying many more.
     updateLayerView(layerView);
-    // update the filter/heatmap every time the user interacts with the timeSlider
+    // update the filter every time the user interacts with the timeSlider
     timeSlider.on(
       ['thumb-drag', 'thumb-change', 'segment-drag'],
       function timeFilter() {
-        if (selectedRenderer === 'Heatmap') {
-          return;
-          // this is really laggy, just update on clicking the query designs button
-          //updateHeatmap();
-        } else {
-          //Update dot/cluster map
-          updateLayerView(layerView);
-          queryLayerViewSymStats(bufferGraphic.geometry).then(function (
-            newData
-          ) {
-            updateChart(newData);
-          });
-        }
+        updateLayerView(layerView);
+        queryLayerViewSymStats(bufferGraphic.geometry).then(function (
+          newData
+        ) {
+          updateChart(newData);
+        });
       }
     );
+
     // update the filter when the user selects a symmetry filter
     symmetrySelect.addEventListener('change', function () {
       selectedSymmetries = [];
@@ -442,7 +397,7 @@ require([
     });
     // update the filter when the user changes the symmetry field
     symRadios.forEach(function (obj) {
-      obj.addEventListener('change', function () {
+      obj.addEventListener('change', function (event) {
         symField = event.target.value;
         // small bug: the layerView displays new points before the
         // renderer applies the color change.
@@ -860,30 +815,6 @@ require([
       whereClause += ')';
     }
     return whereClause;
-  }
-
-  // Update handler for the query designs button
-  var queryDesigns = document.getElementById('query-designs');
-  queryDesigns.addEventListener('click', function () {
-    if (selectedRenderer === 'Heatmap') updateHeatmap();
-  });
-
-  function updateHeatmap() {
-    var query = dataLayer.createQuery();
-    var earlyBound = timeSlider.values[0];
-    var lateBound = timeSlider.values[1];
-    query.where =
-      'mean_date >= ' + earlyBound + ' and mean_date <= ' + lateBound;
-    dataLayer.queryFeatures(query).then(function (results) {
-      updateDesignCount(results.features.length);
-      map.layers.remove(resultsLayer);
-      resultsLayer = new FeatureLayer({
-        source: results.features,
-        objectIdField: 'ObjectID',
-        renderer: heatmap,
-      });
-      map.layers.add(resultsLayer);
-    });
   }
 
   function applyClustering(layer) {
