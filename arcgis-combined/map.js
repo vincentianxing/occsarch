@@ -666,7 +666,6 @@ require([
     // Client-side spatial query:
     // Get a sum of age groups for census tracts that intersect the polygon buffer
     const query = featureLayerView.layer.createQuery();
-    //TODO: take into account selected symmetries filter and time filter when drawing graph
     query.where = getWhereClause();
     query.groupByFieldsForStatistics = symField;
     query.outStatistics = {
@@ -708,7 +707,6 @@ require([
 
     chartExpand.expanded = true;
 
-    // TODO: improve chart formatting
     if (!chart) {
       // Get the canvas element and render the chart in it
       const canvasElement = document.getElementById('chart');
@@ -719,7 +717,6 @@ require([
           labels: syms,
           datasets: [
             {
-              label: 'Occurences',
               data: counts,
               backgroundColor: 'rgba(0, 0, 0, 0.4)',
             },
@@ -729,7 +726,7 @@ require([
           responsive: false,
           title: {
             display: true,
-            text: 'Symmetry Occurences',
+            text: 'Symmetry Occurrences',
           },
           scales: {
             xAxes: [
@@ -742,10 +739,13 @@ require([
                 min: 0,
                 scaleLabel: {
                   display: true,
-                  labelString: 'Occurences',
+                  labelString: 'Number',
                 },
               },
             ],
+          },
+          legend: {
+            display: false
           },
           animation: {
             duration: 0,
