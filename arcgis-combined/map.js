@@ -347,68 +347,46 @@ require([
 
   function rendererChangeHandler(event) {
     selectedRenderer = event.target.getAttribute('rendererData');
-    var queryButton = document.getElementById('query-designs');
     switch (selectedRenderer) {
       case 'Dot':
         removeClustering(dataLayer);
         dataLayer.visible = true;
-        queryButton.style.visibility = 'hidden';
-        queryButton.style.display = 'none';
         break;
       case 'Cluster':
         applyClustering(dataLayer);
         dataLayer.visible = true;
-        queryButton.style.visibility = 'hidden';
-        queryButton.style.display = 'none';
         break;
     }
   }
 
-  function timeFilter() {
-    updateLayerView(featureLayerView);
-    queryLayerViewSymStats(bufferGraphic.geometry).then(function (
-      newData
-    ) {
-      updateChart(newData);
+  timeSlider.on(['thumb-drag', 'thumb-change', 'segment-drag'], updateLayerView);
+  document.getElementById('ignoreTime').addEventListener('change', updateLayerView);
+  // update the filter when the user selects a symmetry filter
+  symmetrySelect.addEventListener('change', function () {
+    selectedSymmetries = [];
+    for (var i = 0; i < symmetrySelect.options.length; i++) {
+      if (symmetrySelect.options[i].selected) {
+        selectedSymmetries.push(symmetrySelect.options[i].text);
+      }
+    }
+    updateLayerView();
+  });
+
+  // update the filter when the user changes the symmetry field
+  symRadios.forEach(function (obj) {
+    obj.addEventListener('change', function (event) {
+      symField = event.target.value;
+      // small bug: the layerView displays new points before the
+      // renderer applies the color change.
+      // This just results in a slight flicker of the colors
+      dataLayer.renderer.field = event.target.value;
+      updateLayerView();
     });
-  }
+  });
 
-  timeSlider.on(['thumb-drag', 'thumb-change', 'segment-drag'], timeFilter);
-  document.getElementById('ignoreTime').addEventListener('change', timeFilter);
-
-  // Update handler for the time slider
+  // Things to do when the layerView first loads
   view.whenLayerView(dataLayer).then(function (layerView) {
     featureLayerView = layerView;
-    // FIXME: the first time the page loads I think this executes too quickly and it says "Displaying 0 Designs" although it is actually displaying many more.
-    updateLayerView(layerView);
-
-    // update the filter when the user selects a symmetry filter
-    symmetrySelect.addEventListener('change', function () {
-      selectedSymmetries = [];
-      for (var i = 0; i < symmetrySelect.options.length; i++) {
-        if (symmetrySelect.options[i].selected) {
-          selectedSymmetries.push(symmetrySelect.options[i].text);
-        }
-      }
-      updateLayerView(layerView);
-      queryLayerViewSymStats(bufferGraphic.geometry).then(function (newData) {
-        updateChart(newData);
-      });
-    });
-    // update the filter when the user changes the symmetry field
-    symRadios.forEach(function (obj) {
-      obj.addEventListener('change', function (event) {
-        symField = event.target.value;
-        // small bug: the layerView displays new points before the
-        // renderer applies the color change.
-        // This just results in a slight flicker of the colors
-        dataLayer.renderer.field = event.target.value;
-        updateLayerView(layerView);
-        queryLayerViewSymStats(bufferGraphic.geometry).then(function (newData) {
-          updateChart(newData);
-        });
-      });
-    });
 
     // create a watcher to trigger drawing of the buffer (selection area) polygon
     pausableWatchHandle = watchUtils.pausable(layerView, 'updating', function (
@@ -416,6 +394,7 @@ require([
     ) {
       if (!val) {
         drawBufferPolygon();
+        updateLayerView();
       }
     });
 
@@ -579,7 +558,6 @@ require([
           center: 'center',
         },
       });
-
       edgeGraphic = new Graphic({
         geometry: edgePoint,
         symbol: pointSymbol,
@@ -587,16 +565,14 @@ require([
           edge: 'edge',
         },
       });
-
       polylineGraphic = new Graphic({
         geometry: polyline,
         symbol: {
           type: 'simple-line',
-          color: [254, 254, 254, 1],
-          width: 2.5,
+          color: [127, 127, 127, 1],
+          width: 2,
         },
       });
-
       bufferGraphic = new Graphic({
         geometry: buffer,
         symbol: {
@@ -760,8 +736,10 @@ require([
     }
   }
 
-  function updateLayerView(layerView) {
-    var whereClause = getWhereClause();
+  function updateLayerView() {
+    if (featureLayerView === undefined) {
+      return;
+    }
     // recolor the symmetries
     if (!selectedSymmetries.includes('All')) {
       var newColoring = [];
@@ -783,11 +761,16 @@ require([
     } else {
       resetColoring(dataLayer);
     }
-    layerView.filter = {
-      where: whereClause,
+    featureLayerView.filter = {
+      where: getWhereClause(),
     };
-    layerView.queryFeatureCount().then(function (count) {
+    featureLayerView.queryFeatureCount().then(function (count) {
       updateDesignCount(count);
+    });
+    queryLayerViewSymStats(bufferGraphic.geometry).then(function (
+      newData
+    ) {
+      updateChart(newData);
     });
   }
 
