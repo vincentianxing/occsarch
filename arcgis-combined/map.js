@@ -359,8 +359,12 @@ require([
     }
   }
 
-  timeSlider.on(['thumb-drag', 'thumb-change', 'segment-drag'], updateLayerView);
+  timeSlider.on(['thumb-drag', 'thumb-change', 'segment-drag'], function() {
+    if (!document.getElementById('ignoreTime').checked)
+      updateLayerView();
+  });
   document.getElementById('ignoreTime').addEventListener('change', updateLayerView);
+  
   // update the filter when the user selects a symmetry filter
   symmetrySelect.addEventListener('change', function () {
     selectedSymmetries = [];
@@ -671,6 +675,7 @@ require([
       })
       .catch(function (error) {
         console.log(error);
+        console.log("Where clause was: " + query.where);
       });
   }
 
@@ -775,16 +780,17 @@ require([
   }
 
   function getWhereClause() {
+    var timeClause = '';
+    var symClause = '';
     if (!document.getElementById('ignoreTime').checked) {
       // select designs that could have been created in the selected year
       var timeSelection = timeSlider.values[0];
-      var whereClause =
-        'earliest_date <= ' + timeSelection + ' and latest_date >= ' + timeSelection;
+      timeClause += 'earliest_date <= ' + timeSelection + ' and latest_date >= ' + timeSelection;
     }
     // match where symField is equal to any of
     // the selected symmetries in the filter drop down
     if (!selectedSymmetries.includes('All')) {
-      whereClause += ' and (1 = 0 '; // just to avoid trying to remove the 'or' on i = 0
+      symClause += '(1 = 0 '; // just to avoid trying to remove the 'or' on i = 0
 
       // SQL query for each selected symmetry
       for (var i = 0; i < selectedSymmetries.length; i++) {
@@ -795,11 +801,15 @@ require([
         if (apostrophe > -1) {
           sym = sym.substring(0, apostrophe) + "'" + sym.substring(apostrophe);
         }
-        whereClause += ' or ' + symField + " = '" + sym + "'";
+        symClause += ' or ' + symField + " = '" + sym + "'";
       }
-      whereClause += ')';
+      symClause += ')';
     }
-    return whereClause;
+    if (timeClause !== '' && symClause !== '') {
+      return timeClause + ' and ' + symClause;
+    } else {
+      return timeClause + symClause;
+    }
   }
 
   function applyClustering(layer) {
