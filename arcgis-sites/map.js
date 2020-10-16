@@ -44,6 +44,7 @@ require([
       'red',
     ];
   
+    // TODO: implement new coloring scheme
     // resets a layer's uniqueRenderer to an initial state
     function resetColoring(layer) {
       if (layer.renderer.type !== 'unique-value') return;
@@ -205,7 +206,31 @@ require([
         document.getElementById('hideLoading').remove();
         resetColoring(dataLayer);
       });
+
+    // get a list of unique symmetries from the tables of designs
+    // Uses Papaparse for csv parsing
+    var designs;
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'Designs.csv', true);
+    xhr.overrideMimeType('text/plain');
+    xhr.onreadystatechange = function() {
+        if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+            designs = xhr.response;
+            results = Papa.parse(xhr.response, {
+                header: true
+            });
+            for (err of results.error) {
+                console.error(err);
+            }
+            designs = results.data;
+            addToSymFilter(getUniqueValues(getValues(designs)));
+            document.getElementById('hideLoading').remove();
+            resetColoring(dataLayer);
+        }
+    };
+    xhr.send();
   
+    // TODO: modify to accept the parsed csv result
     // copied from the documentation, modified with switch statement
     // returns an array of all the values in the sym_(struc|design) field of the dataLayer
     function getValues(response) {
