@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>ArcGIS API Combined Map</title>
+
+  <link rel="stylesheet" type="text/css" href="main.css">
+  <link rel="stylesheet" href="https://js.arcgis.com/4.16/esri/css/main.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+  <script src="https://js.arcgis.com/4.16/"></script>
+  <script src="map.js"></script>
+</head>
+
+<body>
+  <div id="viewDiv"></div>
+  <!-- Hide the UI while the view is loading -->
+  <div id="hideLoading" style="visibility:hidden">
+    <div id="legendDiv"></div>
+    <div id="infoDiv" class="esri-widget">
+      <label for="opacity"><b>Opacity</b></label>
+      <div id="opacity" class="slider"></div>
+      <div id="sym-toggle">
+        <b>Symmetry Field:</b><br>
+        <input type="radio" name="sym-field" value="sym_design">Symmetry Design</input>
+        <input type="radio" name="sym-field" value="sym_struc" checked="checked">Symmetry Structure</input>
+      </div>
+      <div id="drop-down">
+        <b>Filter by Symmetry Type:</b><br>
+        <select id="symmetry-type" class="esri-widget" size="10" multiple>
+          <option value="All">All</option>
+        </select>
+      </div>
+      <b>Query by Year:</b><br>
+      Designs that may have been created in the selected year will be shown. Most designs have a large range in when they may have been created.<br>
+      <label for="time">Year:</label>
+      <div id="time" class="slider"></div>
+      <input type="checkbox" id="ignoreTime">
+      <label for="ignoreTime">Show all designs regardless of year</label>
+      <div id="results" class="esri-widget"></div>
+    </div>
+    <div id="chartPanel"><canvas id="chart" class="chart"></canvas></div>
+  </div>
+</body>
+
+</html>
