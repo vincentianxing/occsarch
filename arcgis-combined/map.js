@@ -407,8 +407,9 @@ require([
       view.popup.open({
         title: 'Center point',
         content:
-          'Drag this point to move the buffer.<br/> ' +
-          'Or drag the <b>Edge</b> point to resize the buffer.',
+          'Drag this point to move the buffer.<br> ' +
+          'Or drag the <b>Edge</b> point to resize the buffer.<br>' +
+          'Click the chart icon in the bottom left to show the results.',
         location: centerGraphic.geometry,
       });
       view.popup.alignment = 'top-left';
@@ -685,8 +686,6 @@ require([
   function updateChart(newData) {
     var syms = newData[0];
     var counts = newData[1];
-
-    chartExpand.expanded = true;
 
     if (!chart) {
       // Get the canvas element and render the chart in it
