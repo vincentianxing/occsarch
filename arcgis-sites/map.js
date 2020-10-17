@@ -43,25 +43,48 @@ require([
       'yellow',
       'red',
     ];
-  
-    // TODO: implement new coloring scheme
-    // resets a layer's uniqueRenderer to an initial state
-    function resetColoring(layer) {
-      if (layer.renderer.type !== 'unique-value') return;
-      var arr = [];
-      for (var i = 0; i < Math.min(symmetries.length, colors.length); i++) {
-        arr.push({
-          value: symmetries[i],
-          symbol: { type: 'simple-marker', size: 6, color: colors[i] },
-        });
-      }
-      layer.renderer = uniqueRenderer;
-      layer.renderer.uniqueValueInfos = arr;
+
+    // TODO
+    // Color the sites according to the frequency of the selected symmetry
+    function updateColoring() {
+
     }
   
     var symRadios = document.getElementsByName('sym-field');
     var symField = 'sym_struc';
     var symmetrySelect = document.getElementById('symmetry-type');
+    var symOptions = [
+      'C1',
+      'C2',
+      'C3',
+      'C4',
+      'C6',
+      'D1',
+      'D2',
+      'D3',
+      'D4',
+      'D6',
+      'p111',
+      'p112',
+      'p1m1',
+      'pm11',
+      'pmm2',
+      'pma2',
+      'p1a1',
+      'p1',
+      'p2',
+      'cmm',
+      'pgg',
+      'pmg',
+      'p4m',
+      'asym',
+    ]
+    symOptions.sort();
+    symOptions.forEach(function (sym) {
+      var option = document.createElement('option');
+      option.text = sym;
+      symmetrySelect.add(option);
+    });
     var selectedSymmetries = ['All'];
   
     var timeSlider = new Slider({
@@ -185,28 +208,10 @@ require([
     });
   
     // setting up various UI elements
-    view.ui.add(rendererExpand, 'top-left');
     view.ui.add(legend, 'top-right');
     view.ui.add('infoDiv', 'bottom-right');
     view.ui.add(chartExpand, 'bottom-left');
   
-    // TODO: this won't query from the dataLayer, it'll query from the database of designs
-    // query all features from the dataLayer to get a list of symmetries
-    view
-      .when(function () {
-        return dataLayer.when(function () {
-          var query = dataLayer.createQuery();
-          return dataLayer.queryFeatures(query);
-        });
-      })
-      .then(getValues)
-      .then(getUniqueValues)
-      .then(addToSymFilter)
-      .then(function () {
-        document.getElementById('hideLoading').remove();
-        resetColoring(dataLayer);
-      });
-
     // get a list of unique symmetries from the tables of designs
     // Uses Papaparse for csv parsing
     var designs;
@@ -219,64 +224,14 @@ require([
             results = Papa.parse(xhr.response, {
                 header: true
             });
-            for (err of results.error) {
-                console.error(err);
+            for (err of results.errors) {
+                console.error('CSV parsing error: ', err);
             }
             designs = results.data;
-            addToSymFilter(getUniqueValues(getValues(designs)));
             document.getElementById('hideLoading').remove();
-            resetColoring(dataLayer);
         }
     };
     xhr.send();
-  
-    // TODO: modify to accept the parsed csv result
-    // copied from the documentation, modified with switch statement
-    // returns an array of all the values in the sym_(struc|design) field of the dataLayer
-    function getValues(response) {
-      var features = response.features;
-      var values;
-      switch (symField) {
-        case 'sym_struc':
-          values = features.map(function (feature) {
-            return feature.attributes.sym_struc;
-          });
-          break;
-        case 'sym_design':
-          values = features.map(function (feature) {
-            return feature.attributes.sym_design;
-          });
-          break;
-        default:
-          console.error(symField + ' is not a valid symmetry field');
-          break;
-      }
-      return values;
-    }
-  
-    // takes an array and returns a set
-    function getUniqueValues(values) {
-      var uniqueValues = [];
-      values.forEach(function (item) {
-        if (
-          (uniqueValues.length < 1 || uniqueValues.indexOf(item) === -1) &&
-          item !== ''
-        ) {
-          uniqueValues.push(item);
-        }
-      });
-      return uniqueValues;
-    }
-  
-    // add all distinct symmetries to the filter drop down
-    function addToSymFilter(values) {
-      values.sort();
-      values.forEach(function (value) {
-        var option = document.createElement('option');
-        option.text = value;
-        symmetrySelect.add(option);
-      });
-    }
     
     // symmetry filter selector handler
     symmetrySelect.addEventListener('change', function () {
@@ -678,7 +633,7 @@ require([
         dataLayer.renderer = uniqueRenderer;
         dataLayer.renderer.uniqueValueInfos = newColoring;
       } else {
-        resetColoring(dataLayer);
+        updateColoring(dataLayer);
       }
       featureLayerView.filter = {
         where: getWhereClause(),
