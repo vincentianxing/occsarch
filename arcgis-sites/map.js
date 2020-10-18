@@ -113,19 +113,30 @@ require([
         'latest',
       ],
       popupTemplate: {
-        // TODO: title
-        title: 'Site',
+        title: '{site_ID}',
         content: [
           {
             type: 'fields',
             fieldInfos: [
-              { fieldName: 'site_ID' },
-              { fieldName: 'site_desig' },
-              { fieldName: 'site_name' },
-              { fieldName: 'site_quad' },
-              { fieldName: 'Elevation' },
-              { fieldName: 'earliest' },
-              { fieldName: 'latest' },
+              { 
+                fieldName: 'site_desig', 
+                label: 'Site Designation' 
+              }, { 
+                fieldName: 'site_name',
+                label: 'Site Name',
+              }, { 
+                fieldName: 'site_quad',
+                label: 'Site Quad (todo: what does this mean?)',
+              }, { 
+                fieldName: 'Elevation',
+                label: 'Elevation',
+              }, { 
+                fieldName: 'earliest',
+                label: 'Earliest Date',
+              }, { 
+                fieldName: 'latest',
+                label: 'Latest Date',
+              },
             ],
           },
         ],
@@ -615,39 +626,17 @@ require([
       }
     }
   
-    // TODO: needs rewrite due to database change
     function updateLayerView() {
       if (featureLayerView === undefined) {
         return;
       }
-      // TODO: implement new way of coloring points
-      /*
-      // recolor the symmetries
-      if (!selectedSymmetries.includes('All')) {
-        var newColoring = [];
-        // update coloring, SQL query for each selected symmetry
-        for (var i = 0; i < selectedSymmetries.length; i++) {
-          var sym = selectedSymmetries[i];
-          // render each unique symmetry in a new color
-          newColoring.push({
-            value: sym,
-            symbol: { type: 'simple-marker', size: 6, color: colors[i] },
-            label: sym,
-          });
-        }
-        // update coloring
-        dataLayer.renderer = uniqueRenderer;
-        dataLayer.renderer.uniqueValueInfos = newColoring;
-      } else {
-        resetColoring(dataLayer);
-      }
-      */
+
       featureLayerView.filter = {
         where: getWhereClause(),
       };
-      featureLayerView.queryFeatureCount().then(function (count) {
-        updateDesignCount(count);
-      });
+
+      updateColoring();
+      updateFeatureCount();
 
       // TODO: reimplement chart
       /*
@@ -657,7 +646,6 @@ require([
       */
     }
   
-    // TODO: I think this will end up being deleted
     function getWhereClause() {
       var timeClause = '';
       var symClause = '';
@@ -666,7 +654,7 @@ require([
         var timeSelection = timeSlider.values[0];
         timeClause += 'earliest <= ' + timeSelection + ' and latest >= ' + timeSelection;
       }
-      // TODO: reimplement symmetry filter
+      // TODO: filter by sites such that at least one of the designs in the site is the selected symmetry
       /*
       // match where symField is equal to any of
       // the selected symmetries in the filter drop down
@@ -695,10 +683,11 @@ require([
     }
   
     // update the html element saying how many designs the map is showing
-    function updateDesignCount(count) {
-      // TODO: actually have this display the number of designs, not just sites
+    async function updateFeatureCount(count) {
+      count = await featureLayerView.queryFeatureCount();
+      // TODO: actually have this display the number of designs
       document.getElementById('results').innerHTML =
-        'Displaying ' + count + ' sites.';
+        'Displaying ' + count + ' sites and ' + '(unimplemented)' + ' designs.';
     }
   });
   
