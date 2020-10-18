@@ -58,7 +58,6 @@ require([
         renderer.uniqueValueInfos.push(unique);
       });
       dataLayer.renderer = renderer;
-      console.log('calling update coloring');
     }
 
     function assignColor(frequency) {
@@ -613,8 +612,8 @@ require([
           return [syms, counts];
         })
         .catch(function (error) {
-          console.log(error);
-          console.log("Where clause was: " + query.where);
+          console.error(error);
+          console.error("Where clause was: " + query.where);
         });
     }
   
