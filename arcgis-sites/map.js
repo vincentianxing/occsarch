@@ -1,5 +1,4 @@
 require([
-    'esri/Map',
     'esri/views/MapView',
     'esri/widgets/Slider',
     'esri/widgets/Expand',
@@ -13,7 +12,6 @@ require([
     'esri/Graphic',
     'esri/Basemap',
   ], function (
-    Map,
     MapView,
     Slider,
     Expand,
@@ -28,32 +26,57 @@ require([
     Basemap
   ) {
     
-    // Unique-value map
-    const uniqueRenderer = {
+    // Default renderer
+    var uniqueRenderer = {
       type: 'unique-value',
-      field: 'sym_struc',
+      field: 'site_ID',
       defaultSymbol: { type: 'simple-marker', size: 6, color: 'white' },
-      legendOptions: { title: 'Symmetry' },
     };
-  
-    // an array of colors that will be used to color sites by symmetry prevalence
-    const colors = [
-      'blue',
-      'green',
-      'yellow',
-      'red',
-    ];
 
     // TODO
     // Color the sites according to the frequency of the selected symmetry
     function updateColoring() {
+      if (sites.size == 0) {
+        console.error('Error: trying to update coloring before the site map has been constructed');
+      }
+      
+      var renderer = {
+        type: 'unique-value',
+        field: 'site_ID',
+        defaultSymbol: { type: 'simple-marker', size: 6, color: 'white' },
+        uniqueValueInfos: [],
+      }
+      sites.forEach(function(site, id) {
+        // TODO: update the coloring
+        var frequency = site[symField].get(selectedSymmetry) / site[symField].get('All');
+        var unique = {
+          value: String(id),
+          symbol: {
+             type: 'simple-marker', 
+             size: 6,
+             color: assignColor(frequency),
+          },
+        };
+        renderer.uniqueValueInfos.push(unique);
+      });
+      dataLayer.renderer = renderer;
+      console.log('calling update coloring');
+    }
 
+    function assignColor(frequency) {
+      if (frequency == 1) return 'white';
+      if (frequency > 0.5) return 'red';
+      if (frequency > 0.25) return 'yellow';
+      if (frequency > 0.1) return 'green';
+      if (frequency > 0.05) return 'blue';
+      // pink is for <5%
+      return 'pink';
     }
   
     var symRadios = document.getElementsByName('sym-field');
     var symField = 'sym_struc';
     var symmetrySelect = document.getElementById('symmetry-type');
-    var symOptions = [
+    const symOptions = [
       'C1',
       'C2',
       'C3',
@@ -78,14 +101,13 @@ require([
       'pmg',
       'p4m',
       'asym',
-    ]
-    symOptions.sort();
+    ].sort();
     symOptions.forEach(function (sym) {
       var option = document.createElement('option');
       option.text = sym;
       symmetrySelect.add(option);
     });
-    var selectedSymmetries = ['All'];
+    var selectedSymmetry = 'All';
   
     var timeSlider = new Slider({
       container: 'time',
@@ -141,8 +163,8 @@ require([
           },
         ],
       },
-      legendEnabled: true,
       renderer: uniqueRenderer,
+      legendEnabled: false,
     });
   
     // used for selection area for frequency graph
@@ -167,10 +189,10 @@ require([
       },
     });
   
-    var map = new Map({
+    var map = {
       basemap: custom_basemap, // before we used "topo"
       layers: [dataLayer/*, bufferLayer, graphicsLayer*/],
-    });
+    };
   
     var view = new MapView({
       container: 'viewDiv',
@@ -202,12 +224,6 @@ require([
     const legend = new Legend({
       view: view,
       container: 'legendDiv',
-      layerInfos: [
-        {
-          layer: dataLayer,
-          title: 'Legend',
-        },
-      ],
     });
   
     var chartExpand = new Expand({
@@ -223,35 +239,69 @@ require([
     view.ui.add('infoDiv', 'bottom-right');
     view.ui.add(chartExpand, 'bottom-left');
   
-    // get a list of unique symmetries from the tables of designs
-    // Uses Papaparse for csv parsing
-    var designs;
+    // construct a map of sites
+    // key: Number siteid
+    // value: Object {
+    //          sym_struc: Map of associated symmetries,
+    //          sym_design: ^,
+    //        }
+    // See also getAssocSyms()
+    var sites = new Map();
     var xhr = new XMLHttpRequest();
     xhr.open('GET', 'Designs.csv', true);
     xhr.overrideMimeType('text/plain');
     xhr.onreadystatechange = function() {
-        if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
-            designs = xhr.response;
-            results = Papa.parse(xhr.response, {
-                header: true
-            });
-            for (err of results.errors) {
-                console.error('CSV parsing error: ', err);
-            }
-            designs = results.data;
-            document.getElementById('hideLoading').remove();
+      if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+        // Uses Papaparse for csv parsing
+        var results = Papa.parse(xhr.response, {
+            header: true
+        });
+        for (var err of results.errors) {
+            console.error('CSV parsing error: ', err);
         }
+        var designs = results.data;
+        dataLayer.queryFeatures().then(function(FeatureSet) {
+          for (var graphic of FeatureSet.features) {
+            var id = graphic.attributes.site_ID;
+            sites.set(id, {
+              sym_struc: getAssocSyms(designs, 'sym struc', id),
+              sym_design: getAssocSyms(designs, 'sym design', id),
+            });
+          }
+        });
+      }
     };
     xhr.send();
+
+    // Returns a Map of symmetry occurences associates with a site id
+    // key: String symmetry
+    // value: Number occurences
+    function getAssocSyms(designs, symfield, id) {
+      var syms = new Map();
+      var siteDesigns = designs.filter(design => design['site ID'] == id);
+      syms.set('All', 0);
+      for (var design of siteDesigns) {
+        var sym = design[symfield];
+        // add the sym to the list if it doesn't exist yet
+        if (!syms.has(sym)) {
+          syms.set(sym, 0);
+        }
+        // increment the occurences by 1
+        syms.set(sym, syms.get(sym) + 1);
+        syms.set('All', syms.get(sym) + 1);
+      }
+      return syms;
+    }
     
     // symmetry filter selector handler
     symmetrySelect.addEventListener('change', function () {
-      selectedSymmetries = [];
       for (var i = 0; i < symmetrySelect.options.length; i++) {
         if (symmetrySelect.options[i].selected) {
-          selectedSymmetries.push(symmetrySelect.options[i].text);
+          selectedSymmetry = symmetrySelect.options[i].text;
+          break;
         }
       }
+      updateColoring();
       updateLayerView();
     });
   
@@ -259,7 +309,7 @@ require([
     symRadios.forEach(function (obj) {
       obj.addEventListener('change', function (event) {
         symField = event.target.value;
-        dataLayer.renderer.field = event.target.value;
+        updateColoring();
         updateLayerView();
       });
     });
@@ -273,8 +323,11 @@ require([
   
     // Things to do when the layerView first loads
     view.whenLayerView(dataLayer).then(function (layerView) {
+      document.getElementById('hideLoading').remove();
       featureLayerView = layerView;
-      updateLayerView();
+      watchUtils.whenFalseOnce(layerView, 'updating', function () {
+          updateLayerView();
+      })
   
       // TODO: reimplement drawing chart
       /*
@@ -635,7 +688,6 @@ require([
         where: getWhereClause(),
       };
 
-      updateColoring();
       updateFeatureCount();
 
       // TODO: reimplement chart
