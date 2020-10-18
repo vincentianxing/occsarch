@@ -33,7 +33,6 @@ require([
       defaultSymbol: { type: 'simple-marker', size: 6, color: 'white' },
     };
 
-    // TODO
     // Color the sites according to the frequency of the selected symmetry
     function updateColoring() {
       if (sites.size == 0) {
@@ -47,7 +46,6 @@ require([
         uniqueValueInfos: [],
       }
       sites.forEach(function(site, id) {
-        // TODO: update the coloring
         var frequency = site[symField].get(selectedSymmetry) / site[symField].get('All');
         var unique = {
           value: String(id),
