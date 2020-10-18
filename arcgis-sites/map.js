@@ -107,7 +107,7 @@ require([
         'site_ID',
         'site_desig',
         'site_name',
-        'site_quad',
+        'state_quad',
         'Elevation',
         'earliest',
         'latest',
@@ -158,7 +158,7 @@ require([
   
     var map = new Map({
       basemap: custom_basemap, // before we used "topo"
-      layers: [dataLayer, bufferLayer, graphicsLayer],
+      layers: [dataLayer/*, bufferLayer, graphicsLayer*/],
     });
   
     var view = new MapView({
@@ -263,7 +263,10 @@ require([
     // Things to do when the layerView first loads
     view.whenLayerView(dataLayer).then(function (layerView) {
       featureLayerView = layerView;
+      updateLayerView();
   
+      // TODO: reimplement drawing chart
+      /*
       // create a watcher to trigger drawing of the buffer (selection area) polygon
       pausableWatchHandle = watchUtils.pausable(layerView, 'updating', function (
         val
@@ -273,7 +276,7 @@ require([
           updateLayerView();
         }
       });
-  
+
       // Display directions when the layerView is loading
       watchUtils.whenFalseOnce(layerView, 'updating', function () {
         view.popup.open({
@@ -293,6 +296,7 @@ require([
           view.popup.close();
         }
       });
+      */
     });
   
     setUpSketch();
@@ -616,6 +620,8 @@ require([
       if (featureLayerView === undefined) {
         return;
       }
+      // TODO: implement new way of coloring points
+      /*
       // recolor the symmetries
       if (!selectedSymmetries.includes('All')) {
         var newColoring = [];
@@ -633,19 +639,22 @@ require([
         dataLayer.renderer = uniqueRenderer;
         dataLayer.renderer.uniqueValueInfos = newColoring;
       } else {
-        updateColoring(dataLayer);
+        resetColoring(dataLayer);
       }
+      */
       featureLayerView.filter = {
         where: getWhereClause(),
       };
       featureLayerView.queryFeatureCount().then(function (count) {
         updateDesignCount(count);
       });
-      queryLayerViewSymStats(bufferGraphic.geometry).then(function (
-        newData
-      ) {
+
+      // TODO: reimplement chart
+      /*
+      queryLayerViewSymStats(bufferGraphic.geometry).then(function (newData) {
         updateChart(newData);
       });
+      */
     }
   
     // TODO: I think this will end up being deleted
@@ -655,8 +664,10 @@ require([
       if (!document.getElementById('ignoreTime').checked) {
         // select designs that could have been created in the selected year
         var timeSelection = timeSlider.values[0];
-        timeClause += 'earliest_date <= ' + timeSelection + ' and latest_date >= ' + timeSelection;
+        timeClause += 'earliest <= ' + timeSelection + ' and latest >= ' + timeSelection;
       }
+      // TODO: reimplement symmetry filter
+      /*
       // match where symField is equal to any of
       // the selected symmetries in the filter drop down
       if (!selectedSymmetries.includes('All')) {
@@ -675,6 +686,7 @@ require([
         }
         symClause += ')';
       }
+      */
       if (timeClause !== '' && symClause !== '') {
         return timeClause + ' and ' + symClause;
       } else {
@@ -684,8 +696,9 @@ require([
   
     // update the html element saying how many designs the map is showing
     function updateDesignCount(count) {
+      // TODO: actually have this display the number of designs, not just sites
       document.getElementById('results').innerHTML =
-        'Displaying ' + count + ' designs.';
+        'Displaying ' + count + ' sites.';
     }
   });
   
