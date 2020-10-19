@@ -15,6 +15,26 @@ body,
 	width: 170px;
 }
 
+#legendDiv > h3 {
+	margin-top: 15px;
+	margin-bottom: 15px;
+	margin-left: 20px;
+}
+
+#legendDiv > h4 {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-left: 25px;
+}
+
+#legendDiv > ul {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-left: 35px;
+	list-style-type: none;
+	padding: 0px;
+}
+
 #chartPanel {
 	background: white;
 	font: "Avenir Next W00";

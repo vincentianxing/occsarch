@@ -34,6 +34,7 @@ require([
     };
 
     // Color the sites according to the frequency of the selected symmetry
+    // TODO: this makes the renderer really slow, but it works
     function updateColoring() {
       if (sites.size == 0) {
         console.error('Error: trying to update coloring before the site map has been constructed');
@@ -217,12 +218,6 @@ require([
       bufferLayer.opacity = opacity;
     });
   
-    //TODO: show the color ranges for symmetry prevalence in the legend
-    const legend = new Legend({
-      view: view,
-      container: 'legendDiv',
-    });
-  
     var chartExpand = new Expand({
       expandIconClass: 'esri-icon-chart',
       expandTooltip: 'Symmetry Frequency Chart',
@@ -232,7 +227,7 @@ require([
     });
   
     // setting up various UI elements
-    view.ui.add(legend, 'top-right');
+    view.ui.add('legendDiv', 'top-right');
     view.ui.add('infoDiv', 'bottom-right');
     view.ui.add(chartExpand, 'bottom-left');
   

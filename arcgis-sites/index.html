@@ -21,7 +21,48 @@
   <div id="viewDiv"></div>
   <!-- Hide the UI while the view is loading -->
   <div id="hideLoading" style="visibility:hidden">
-    <div id="legendDiv"></div>
+    <div id="legendDiv" class="esri-widget">
+      <h3>Legend</h3>
+      <h4>Selected Symmetry Prevalence</h4>
+      <ul>
+        <li>
+          <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8">
+              <circle fill="white" stroke="black" cx="4" cy="4" r="4"></circle>
+          </svg>
+          100%
+        </li>
+        <li>
+          <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8">
+              <circle fill="red" stroke="black" cx="4" cy="4" r="4"></circle>
+          </svg>
+          51%-99%
+        </li>
+        <li>
+          <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8">
+              <circle fill="yellow" stroke="black" cx="4" cy="4" r="4"></circle>
+          </svg>
+          26%-50%
+        </li>
+        <li>
+          <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8">
+              <circle fill="green" stroke="black" cx="4" cy="4" r="4"></circle>
+          </svg>
+          11%-25%
+        </li>
+        <li>
+          <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8">
+              <circle fill="blue" stroke="black" cx="4" cy="4" r="4"></circle>
+          </svg>
+          6%-10%
+        </li>
+        <li>
+          <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8">
+              <circle fill="pink" stroke="black" cx="4" cy="4" r="4"></circle>
+          </svg>
+          &leq;5%
+        </li>
+      </ul>
+    </div>
     <div id="infoDiv" class="esri-widget">
       <label for="opacity"><b>Opacity</b></label>
       <div id="opacity" class="slider"></div>
@@ -32,8 +73,8 @@
       </div>
       <div id="drop-down">
         <b>Filter by Symmetry Type:</b><br>
-        <select id="symmetry-type" class="esri-widget" size="10" multiple>
-          <option value="All">All</option>
+        <select id="symmetry-type" class="esri-widget" size="10">
+          <option value="All" selected>All</option>
         </select>
       </div>
       <b>Query by Year:</b><br>
