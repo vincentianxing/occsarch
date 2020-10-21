@@ -642,12 +642,17 @@ require([
             scales: {
               xAxes: [
                 {
-                  autoSkip: false,
+                  ticks: {
+                    autoSkip: false,
+                  },
                 },
               ],
               yAxes: [
                 {
-                  min: 0,
+                  ticks: {
+                    beginAtZero: true,
+                    precision: 0, // only label integer ticks
+                  },
                   scaleLabel: {
                     display: true,
                     labelString: 'Number',
