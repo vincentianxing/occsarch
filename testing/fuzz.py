@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 # Slightly change the location of each site
+# Usage: python3 fuzz.py [
 
 import sys
 import os
@@ -26,6 +27,15 @@ def is_num(s, nanAllowed=False):
             return True
 
 if len(sys.argv) > 1:
+    if sys.argv[1] == '-h' or sys.argv[1] == '--help':
+        print('Adjust the latitude and longitude of each row of a .csv by 5-10 km in a random direction')
+        print('Assumes latitude of about 30N, otherwise the distance a point is fuzzed may be off')
+        print()
+        print('Usage: [python3] ./fuzz.py [FILE] [POSTFIX]')
+        print('\tFILE      The .csv file to be adjusted.')
+        print('\tPOSTFIX   The string to append to the filename when writing the altered file. Defaults to "_fuzz"')
+        exit(0)
+
     file_name = sys.argv[1]
 else:
     file_name = input("filename: ")
@@ -107,7 +117,7 @@ else:
             new_data.append(row[:])
 
 file_name_split = file_name.split('.')
-if (len(file_name_split)>1):
+if len(file_name_split)>2 or (len(file_name_split) == 2 and file_name_split[0] != ''):
     file_name_split[-2] += postfix
     new_file_name = '.'.join(file_name_split)
 else:
