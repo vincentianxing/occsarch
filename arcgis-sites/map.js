@@ -189,7 +189,7 @@ require([
   
     var map = {
       basemap: custom_basemap, // before we used "topo"
-      layers: [dataLayer/*, bufferLayer, graphicsLayer*/],
+      layers: [dataLayer, bufferLayer, graphicsLayer],
     };
   
     var view = new MapView({
@@ -321,8 +321,6 @@ require([
           updateLayerView();
       })
   
-      // TODO: reimplement drawing chart
-      /*
       // create a watcher to trigger drawing of the buffer (selection area) polygon
       pausableWatchHandle = watchUtils.pausable(layerView, 'updating', function (
         val
@@ -352,7 +350,6 @@ require([
           view.popup.close();
         }
       });
-      */
     });
   
     setUpSketch();
@@ -569,42 +566,41 @@ require([
       });
     }
   
-    // TODO: needs rewrite due to database change
     // spatially query the feature layer view for statistics using the updated buffer polygon
     function queryLayerViewSymStats(buffer) {
-      // Data storage for the chart
-      let syms = [];
-      let counts = [];
-  
       // Client-side spatial query:
-      // Get a sum of age groups for census tracts that intersect the polygon buffer
+      // Get a list of sites that intersect with the buffer
       const query = featureLayerView.layer.createQuery();
       query.where = getWhereClause();
-      query.groupByFieldsForStatistics = symField;
-      query.outStatistics = {
-        onStatisticField: symField,
-        outStatisticFieldName: symField + '_TOTAL',
-        statisticType: 'count',
-      };
-      query.orderByFields = [symField + '_TOTAL DESC'];
       query.geometry = buffer;
   
       // Query the features on the client using FeatureLayerView.queryFeatures
       return featureLayerView
         .queryFeatures(query)
         .then(function (results) {
-          // Loop through attributes and save the values for use in the frequency chart
+          // Construct an array of site IDs that intersect with the buffer
+          var s = [];
           for (var graphic of results.features) {
-            row = graphic.attributes;
-            for (var property in row) {
-              if (property.includes('TOTAL')) {
-                counts.push(row[property]);
-              } else {
-                syms.push(row[property]);
-              }
-            }
+            site = graphic.attributes;
+            s.push(graphic.attributes.site_ID);
           }
-          return [syms, counts];
+
+          // For each site, add the symmetries in that site to data
+          var newData = {};
+          for (var id of s) {
+            var syms = sites.get(id)[symField];
+            syms.delete('All');
+            syms.forEach(function (occurences, sym) {
+              if (typeof newData[sym] === 'undefined') {
+                newData[sym] = occurences;
+              } else {
+                newData[sym] += occurences;
+              }
+            });
+          }
+
+          // Send newData to updateChart
+          return newData;
         })
         .catch(function (error) {
           console.error(error);
@@ -615,8 +611,9 @@ require([
     // Chart is created using the Chart.js library
     var chart;
     function updateChart(newData) {
-      var syms = newData[0];
-      var counts = newData[1];
+      // TODO: draw the bars in descending order
+      var syms = Object.keys(newData);
+      var counts = Object.values(newData);
   
       if (!chart) {
         // Get the canvas element and render the chart in it
@@ -687,12 +684,11 @@ require([
 
       updateFeatureCount();
 
-      // TODO: reimplement chart
-      /*
-      queryLayerViewSymStats(bufferGraphic.geometry).then(function (newData) {
-        updateChart(newData);
-      });
-      */
+      if (bufferGraphic) {
+        queryLayerViewSymStats(bufferGraphic.geometry).then(function (newData) {
+          updateChart(newData);
+        });
+      }
     }
   
     function getWhereClause() {
