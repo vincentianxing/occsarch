@@ -2,7 +2,6 @@ require([
     'esri/views/MapView',
     'esri/widgets/Slider',
     'esri/widgets/Expand',
-    'esri/widgets/Legend',
     'esri/layers/FeatureLayer',
     'esri/layers/GraphicsLayer',
     'esri/core/watchUtils',
@@ -15,7 +14,6 @@ require([
     MapView,
     Slider,
     Expand,
-    Legend,
     FeatureLayer,
     GraphicsLayer,
     watchUtils,
@@ -217,6 +215,21 @@ require([
       dataLayer.opacity = opacity;
       bufferLayer.opacity = opacity;
     });
+
+    var legendExpand = new Expand({
+      expandIconClass: 'esri-icon-layer-list',
+      expandTooltip: 'Legend',
+      expanded: true,
+      view: view,
+      content: document.getElementById('legendDiv'),
+    })
+  
+    var infoExpand = new Expand({
+      expandIconClass: 'esri-icon-settings',
+      expanded: true,
+      view: view,
+      content: document.getElementById('infoDiv'),
+    })
   
     var chartExpand = new Expand({
       expandIconClass: 'esri-icon-chart',
@@ -225,10 +238,10 @@ require([
       view: view,
       content: document.getElementById('chartPanel'),
     });
-  
+
     // setting up various UI elements
-    view.ui.add('legendDiv', 'top-right');
-    view.ui.add('infoDiv', 'bottom-right');
+    view.ui.add(legendExpand, 'top-right');
+    view.ui.add(infoExpand, 'bottom-right');
     view.ui.add(chartExpand, 'bottom-left');
   
     // construct a map of sites

@@ -16,7 +16,8 @@ body,
 }
 
 #legendDiv > h3 {
-	margin-top: 15px;
+	padding-top: 15px;
+	margin-top: 0px;
 	margin-bottom: 15px;
 	margin-left: 20px;
 }
