@@ -328,7 +328,6 @@ require([
   
     // Things to do when the layerView first loads
     view.whenLayerView(dataLayer).then(function (layerView) {
-      document.getElementById('hideLoading').remove();
       featureLayerView = layerView;
       watchUtils.whenFalseOnce(layerView, 'updating', function () {
           updateLayerView();
