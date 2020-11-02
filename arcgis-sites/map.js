@@ -401,13 +401,6 @@ require([
   
       // client-side stats query of features that intersect the buffer
       calculateBuffer(vertices);
-  
-      // user is clicking on the view... call update method with the center and edge graphics
-      if (event.state === 'complete') {
-        sketchViewModel.update([edgeGraphic, centerGraphic], {
-          tool: 'move',
-        });
-      }
     }
   
     function calculateBuffer(vertices) {
