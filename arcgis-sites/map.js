@@ -601,8 +601,9 @@ require([
           var newData = {};
           for (var id of s) {
             var syms = sites.get(id)[symField];
-            syms.delete('All');
             syms.forEach(function (occurences, sym) {
+              if (sym === 'All')
+                return;
               if (typeof newData[sym] === 'undefined') {
                 newData[sym] = occurences;
               } else {
