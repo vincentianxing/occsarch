@@ -739,7 +739,6 @@ require([
   
     // update the html element saying how many designs the map is showing
     async function updateFeatureCount() {
-      console.log(sites);
       var featureSet = await featureLayerView.queryFeatures();
       var features = featureSet.features;
       var dataPoints = 0;
