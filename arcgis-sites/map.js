@@ -117,7 +117,7 @@ require([
       },
     });
 
-    const dataURL = 'https://services5.arcgis.com/yVCUkdcXCabMuIIK/arcgis/rest/services/latlonsites_fuzz/FeatureServer';
+    const dataURL = 'https://services5.arcgis.com/yVCUkdcXCabMuIIK/arcgis/rest/services/latlonsites_fuzz2/FeatureServer';
     var dataLayer = new FeatureLayer({
       url: dataURL,
       // outFields configured for tables of sites
