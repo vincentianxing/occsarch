@@ -82,7 +82,7 @@ if has_sites:
     print(len(data), "rows and", len(new_sites), "sites")
 
     for k, v in new_sites.items():
-        hyp = 5+rd.random()*5
+        hyp = 0.5+rd.random()*0.5
         theta = math.tau * rd.random()
         d_lat = hyp*math.sin(theta)*LAT_PER_KM
         d_lon = hyp*math.cos(theta)*LON_PER_KM
@@ -103,7 +103,7 @@ else:
             lat = float(row[lat_index])
             lon = float(row[lon_index])
 
-            hyp = 5+rd.random()*5
+            hyp = 0.5+rd.random()*0.5
             theta = math.tau * rd.random()
             d_lat = hyp*math.sin(theta)*LAT_PER_KM
             d_lon = hyp*math.cos(theta)*LON_PER_KM
