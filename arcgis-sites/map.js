@@ -297,7 +297,7 @@ require([
         }
         // increment the occurences by 1
         syms.set(sym, syms.get(sym) + 1);
-        syms.set('All', syms.get(sym) + 1);
+        syms.set('All', syms.get('All') + 1);
       }
       return syms;
     }
@@ -738,11 +738,17 @@ require([
     }
   
     // update the html element saying how many designs the map is showing
-    async function updateFeatureCount(count) {
-      count = await featureLayerView.queryFeatureCount();
-      // TODO: actually have this display the number of designs
+    async function updateFeatureCount() {
+      console.log(sites);
+      var featureSet = await featureLayerView.queryFeatures();
+      var features = featureSet.features;
+      var dataPoints = 0;
+      features.forEach(function(feature) {
+        const site = sites.get(feature.attributes.site_ID);
+        dataPoints += site[symField].get('All');
+      });
       document.getElementById('results').innerHTML =
-        'Displaying ' + count + ' sites and ' + '(unimplemented)' + ' designs.';
+        'Displaying ' + features.length + ' sites containing ' + dataPoints + ' data points.';
     }
   });
   
