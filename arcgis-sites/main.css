@@ -13,6 +13,7 @@ body,
 
 #legendDiv {
 	width: 170px;
+	padding-bottom: 1px;
 }
 
 #legendDiv > h3 {
@@ -30,7 +31,6 @@ body,
 
 #legendDiv > ul {
 	margin-top: 10px;
-	margin-bottom: 10px;
 	margin-left: 35px;
 	list-style-type: none;
 	padding: 0px;
