@@ -49,3 +49,10 @@ body,
 .chart {
 	height: 280px;
 }
+
+/*
+ * Use .SitePopup and .SiteDesignData to define rules for the popup content that appears when you click on a site
+ */
+.SiteDesignData {
+	padding-left: 8px;
+}

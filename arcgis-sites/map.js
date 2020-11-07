@@ -135,37 +135,51 @@ require([
         'latest',
       ],
       popupTemplate: {
-        title: '{site_ID}',
-        content: [
-          {
-            type: 'fields',
-            fieldInfos: [
-              { 
-                fieldName: 'site_desig', 
-                label: 'Site Designation' 
-              }, { 
-                fieldName: 'site_name',
-                label: 'Site Name',
-              }, { 
-                fieldName: 'site_quad',
-                label: 'Site Quad (todo: what does this mean?)',
-              }, { 
-                fieldName: 'Elevation',
-                label: 'Elevation',
-              }, { 
-                fieldName: 'earliest',
-                label: 'Earliest Date',
-              }, { 
-                fieldName: 'latest',
-                label: 'Latest Date',
-              },
-            ],
-          },
-        ],
+        title: 'Site ID {site_ID}',
+        outFields: ['site_desig'],
+        content: setContentInfo,
       },
       renderer: uniqueRenderer,
       legendEnabled: false,
     });
+
+    function setContentInfo(feature) {
+      var node = document.createElement('div');
+      node.classList = 'SitePopup';
+
+      // table with site fields
+      var attributes = feature.graphic.attributes;
+      var siteData = '<table>' +
+        '<tr><td>Site Designation</td><td>' + attributes.site_desig + '</tr>' + 
+        '<tr><td>Site Name</td><td>' + attributes.site_name + '</tr>' +
+        '<tr><td>State Quad (todo: what is this?)</td><td>' + attributes.state_quad + '</tr>' +
+        '<tr><td>Elevation</td><td>' + attributes.Elevation + '</tr>' +
+        '<tr><td>Earliest Date</td><td>' + attributes.earliest + '</tr>' +
+        '<tr><td>Latest Date</td><td>' + attributes.latest + '</tr>' +
+        '</table>';
+      var tmp = document.createElement('div');
+      tmp.innerHTML = siteData;
+      var table = tmp.firstChild;
+      // use the default esri table formatting
+      table.classList = 'esri-widget__table';
+      node.appendChild(table);
+
+      // shows fraction of designs present in the site that accord with the selected filter
+      var site = sites.get(attributes.site_ID);
+      var curDesigns = site[symField].get(selectedSymmetry);
+      if (typeof curDesigns === 'undefined') {
+        curDesigns = 0;
+      }
+      var totalDesigns = site[symField].get('All');
+      var designData = document.createElement('div');
+      designData.innerHTML = 
+        '<b>' + curDesigns + '/' + totalDesigns + '</b> or <b>' + 
+        (curDesigns / totalDesigns * 100).toPrecision(3) + 
+        '%</b> of designs have the selected data type';
+      node.appendChild(designData);
+
+      return node;
+    }
   
     // used for selection area for frequency graph
     var centerGraphic,
@@ -538,11 +552,13 @@ require([
         // once center and edge point graphics are added to the layer,
         // call sketch's update method pass in the graphics so that users
         // can just drag these graphics to adjust the buffer
+        /*
         setTimeout(function () {
           sketchViewModel.update([edgeGraphic, centerGraphic], {
             tool: 'move',
           });
         }, 1000);
+        */
   
         bufferLayer.addMany([bufferGraphic]);
       }
