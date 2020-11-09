@@ -69,9 +69,11 @@ require([
       return 'pink';
     }
   
+    // defining DOM nodes and constants for the data field and data type selectors
     var symRadios = document.getElementsByName('sym-field');
     var symField = 'sym_struc';
     var symmetrySelect = document.getElementById('symmetry-type');
+    var selectedSymmetry = 'All';
     const symOptions = [
       'p112',
       'pma2',
@@ -101,13 +103,84 @@ require([
       'p\'c4mm',
       'p\'bmg',
       'cmm\'',
-    ].sort();
-    symOptions.forEach(function (sym) {
-      var option = document.createElement('option');
-      option.text = sym;
-      symmetrySelect.add(option);
-    });
-    var selectedSymmetry = 'All';
+    ];
+    const colorOptions = [
+      'colored',
+      '1-color',
+      '2-color',
+    ];
+    const typeOptions = [
+      'Abajo R/O',
+      'Awatovi B/Y',
+      'Biscuit B',
+      'Black Mesa B/W',
+      'Chaco B/W',
+      'Chapin B/W',
+      'Escavada B/W',
+      'Gallup B/W',
+      'Gila Butte R/B',
+      'Gila Poly',
+      'Homolovi Poly',
+      'Jeddito B/O',
+      'Jeddito B/Y',
+      'Kiatuthlanna B/W',
+      'Mancos B/W',
+      'McElmo B/W',
+      'Mesa Verde B/W',
+      'Mimbres B/W',
+      'Piedra B/W',
+      'Pinedale B/W',
+      'Pinto Poly',
+      'Ramos Poly',
+      'Red Mesa B/W',
+      'Rincon R/B',
+      'Santa Cruz R/B',
+      'Sacaton R/B',
+      'Sankawi B/C',
+      'Santa Fe B/W',
+      'Sikyatki Poly',
+      'St Johns Poly',
+      'Tonto Poly',
+      'Tularosa B/W',
+      'Tusayan B/W',
+    ];
+
+    // show a list of data types depending on the selected data field
+    function updateDataTypes(field) {
+      // remove existing list of data types
+      while (symmetrySelect.firstChild) {
+        symmetrySelect.removeChild(symmetrySelect.firstChild);
+      }
+
+      var options;
+      switch(field) {
+        case 'sym_design':
+          options = symOptions;
+          break;
+        case 'sym_struc':
+          options = symOptions;
+          break;
+        case 'band_color':
+          options = colorOptions;
+          break;
+        case 'type':
+          options = typeOptions;
+          break;
+        default:
+          console.error('Invalid data field, expected sym_design, sym_struc, band_color, or type, instead got: ' + field);
+          break;
+      }
+      var a = document.createElement('option');
+      a.text = 'All';
+      symmetrySelect.add(a);
+      options.forEach(function (o) {
+        var newopt = document.createElement('option');
+        newopt.text = o;
+        symmetrySelect.add(newopt);
+      });
+    }
+    // call once on intitialization
+    updateDataTypes(symField);
   
     var timeSlider = new Slider({
       container: 'time',
@@ -267,11 +340,13 @@ require([
     // value: Object {
     //          sym_struc: Map of associated symmetries,
     //          sym_design: ^,
+    //          band_color: ^,
+    //          type: ^
     //        }
     // See also getAssocSyms()
     var sites = new Map();
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'Designs.csv', true);
+    xhr.open('GET', 'Designs + Vessels.csv', true);
     xhr.overrideMimeType('text/plain');
     xhr.onreadystatechange = function() {
       if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
@@ -289,6 +364,8 @@ require([
             sites.set(id, {
               sym_struc: getAssocSyms(designs, 'sym struc', id),
               sym_design: getAssocSyms(designs, 'sym design', id),
+              band_color: getAssocSyms(designs, 'band color', id),
+              type: getAssocSyms(designs, 'type', id),
             });
           }
         });
@@ -316,7 +393,7 @@ require([
       return syms;
     }
     
-    // symmetry filter selector handler
+    // data type selector handler
     symmetrySelect.addEventListener('change', function () {
       for (var i = 0; i < symmetrySelect.options.length; i++) {
         if (symmetrySelect.options[i].selected) {
@@ -328,10 +405,12 @@ require([
       updateLayerView();
     });
   
-    // symmetry field selector handler
+    // data field selector handler
     symRadios.forEach(function (obj) {
       obj.addEventListener('change', function (event) {
         symField = event.target.value;
+        updateDataTypes(symField);
+        selectedSymmetry = 'All';
         updateColoring();
         updateLayerView();
       });
