@@ -33,29 +33,30 @@ require([
 
     // Color the sites according to the frequency of the selected symmetry
     // TODO: this makes the renderer really slow, but it works
-    function updateColoring() {
-      if (sites.size == 0) {
-        console.error('Error: trying to update coloring before the site map has been constructed');
-      }
-      
+    function updateColoring() {      
       var renderer = {
         type: 'unique-value',
         field: 'site_ID',
         defaultSymbol: { type: 'simple-marker', size: 6, color: 'white' },
         uniqueValueInfos: [],
       }
-      sites.forEach(function(site, id) {
-        var frequency = site[symField].get(selectedSymmetry) / site[symField].get('All');
-        var unique = {
-          value: String(id),
-          symbol: {
-             type: 'simple-marker', 
-             size: 6,
-             color: assignColor(frequency),
-          },
-        };
-        renderer.uniqueValueInfos.push(unique);
-      });
+      if (selectedSymmetry !== 'All') {
+        if (sites.size == 0) {
+          console.error('Error: trying to update coloring before the site map has been constructed');
+        }
+        sites.forEach(function(site, id) {
+          var frequency = site[symField].get(selectedSymmetry) / site[symField].get('All');
+          var unique = {
+            value: String(id),
+            symbol: {
+              type: 'simple-marker', 
+              size: 6,
+              color: assignColor(frequency),
+            },
+          };
+          renderer.uniqueValueInfos.push(unique);
+        });
+      }
       dataLayer.renderer = renderer;
     }
 
