@@ -3416,10 +3416,10 @@ design ID,vessel ID,site ID,site desig,catalog #,museum,diameter,height,circumf,
 3430,2466,56,,375868,SS,85,110,490,458,,,0,,jar,whole,mineral,Jeddito B/Y,,A,ext body,pendant,,70,170,2,B/Y,1,0,1,1,1,0,0,thick,solid,oneD,asym,asym,motifs vary,1-color
 3431,2467,56,,375869,SS,70,130,510,654,,,0,,jar,whole,,,,A,ext neck,slanted to rim,ticked,30,190,0,B/W,0,0,0,0,0,0,0,thick,solid,oneD,p112,p112,,1-color
 3432,2467,56,,375869,SS,70,130,510,654,,,0,,jar,whole,,,,B,ext body,parallel to rim,ticked,65,190,2,B/W,0,0,0,1,1,0,0,thick,solid,oneD,pmm2,p111,,1-color
-3433,2468,57,NA879,1599,WACC,120,65,0,235,,burial 5,0,,cup,whole,carbon,Tusayan B/W,with handle,A,int center,pendant from rim,plain,0,0,4,B/W,0,0,0,0,0,0,0,none,line,finite,C4,C4,,
-3434,2469,57,,1600,WACC,190,90,0,637,,burial 5,0,,bowl,whole,,,,A,int wall,parallel to rim,plain,0,0,6,B/R,1,0,0,0,1,0,0,none,solid hatched,oneD,p112,p111,,
-3435,2469,57,,1600,WACC,190,90,0,637,,burial 5,0,,bowl,whole,,,,B,ext below rim,parallel to rim,plain,0,0,0,R/T,0,0,0,0,0,0,0,none,line,oneD,p112,p112,,
-3436,2470,57,,1601,WACC,120,60,0,500,room,,44,,ladle,whole,mineral,Flagstaff B/W,,A,int center,allover,plain,0,0,2,B/W,0,0,0,1,0,0,0,none,line,finite,C2,asym,motifs vary,
+3433,2468,57,NA879,1599,WACC,120,65,0,235,,burial 5,0,,cup,whole,carbon,Tusayan B/W,with handle,A,int center,pendant from rim,plain,0,0,4,B/W,0,0,0,0,0,0,0,none,line,finite,C4,C4,,null
+3434,2469,57,,1600,WACC,190,90,0,637,,burial 5,0,,bowl,whole,,,,A,int wall,parallel to rim,plain,0,0,6,B/R,1,0,0,0,1,0,0,none,solid hatched,oneD,p112,p111,,null
+3435,2469,57,,1600,WACC,190,90,0,637,,burial 5,0,,bowl,whole,,,,B,ext below rim,parallel to rim,plain,0,0,0,R/T,0,0,0,0,0,0,0,none,line,oneD,p112,p112,,null
+3436,2470,57,,1601,WACC,120,60,0,500,room,,44,,ladle,whole,mineral,Flagstaff B/W,,A,int center,allover,plain,0,0,2,B/W,0,0,0,1,0,0,0,none,line,finite,C2,asym,motifs vary,null
 3445,2477,57,,7662,WACC,30,180,640,840,room,,1,fill,canteen,whole,carbon,Black Mesa B/W,,B,ext body,parallel to rim,,0,0,5,B/W,1,0,0,0,1,0,0,none,solid,oneD,p112,p112,,1-color
 3446,2478,57,,7663,WACC,140,65,0,300,room,burial 11,29,,bowl,whole,carbon,,kill hole,A,int wall,parallel to rim,plain,0,0,4,B/W,0,0,0,0,0,0,0,none,line solid dot,oneD,pma2,asym,motifs vary,1-color
 3447,2479,57,,7664,WACC,40,130,460,505,room,burial 11,29,,canteen,whole,carbon,Black Mesa B/W,,A,ext body,slanted to rim,plain,0,0,0,B/W,0,0,0,1,0,1,0,none,solid,oneD,pmm2,asym,sym varies,1-color
@@ -3726,7 +3726,7 @@ design ID,vessel ID,site ID,site desig,catalog #,museum,diameter,height,circumf,
 3743,2677,61,,222704,S,90,160,0,1389,room,,127,fill,kivaj,whole,carbon,Mesa Verde B/W,,A,ext body,parallel to rim,ticked,50,0,11,B/W,0,0,0,0,0,0,0,thin thick,solid,oneD,p1a1,p1a1,,1-color
 3744,2678,61,,222859,S,260,125,0,1134,room,,58,fill,bowl,whole,mineral,St Johns Poly,,A,int wall,parallel to rim,plain,105,0,6,B/O,0,0,0,0,1,0,0,none,solid hatched,oneD,p112,p112',Upper Gila,2-color
 3745,2678,61,,222859,S,260,125,0,1134,room,,58,fill,bowl,whole,mineral,St Johns Poly,,B,ext below rim,parallel to rim,plain,85,0,7,W/O,0,0,0,0,0,0,0,none,line solid,oneD,p111,p111,,1-color
-3746,2678,61,,222859,S,260,125,0,1134,room,,58,fill,bowl,whole,mineral,St Johns Poly,,C,int center,center base,plain,0,0,1,B/O,1,0,0,0,0,0,1,none,line,finite,C4,C4,,
+3746,2678,61,,222859,S,260,125,0,1134,room,,58,fill,bowl,whole,mineral,St Johns Poly,,C,int center,center base,plain,0,0,1,B/O,1,0,0,0,0,0,1,none,line,finite,C4,C4,,null
 3747,2679,61,,222911,S,0,0,0,0,room,,129,fill,jar,rsherd,carbon,Mesa Verde B/W,,A,ext body,parallel to rim,indeter,42,0,0,B/W,0,0,0,0,0,0,0,thin thick,solid,oneD,p1a1,p1a1,,1-color
 3748,2680,61,,222966,S,360,0,0,0,room,,129,fill,bowl,rsherd,carbon,Mesa Verde B/W,,A,int wall,parallel to rim,zigzag,0,0,0,B/W,0,0,0,0,0,0,0,thin thick,solid,oneD,p1a1,p1a1,,1-color
 3749,2681,61,,222983,S,0,0,0,0,room,,58,roof,bowl,rsherd,carbon,Mesa Verde B/W,,A,int wall,parallel to rim,ticked,55,0,0,B/W,0,0,0,0,0,0,0,thin thick,solid,oneD,p1a1,p1a1,,1-color
@@ -4266,9 +4266,9 @@ design ID,vessel ID,site ID,site desig,catalog #,museum,diameter,height,circumf,
 4295,3041,61,,441450,S,200,0,0,0,room,,129,fill,bowl,rsherd,carbon,McElmo B/W,,A,int wall,parallel to rim,ticked,55,0,0,B/W,0,0,0,0,0,0,0,none,solid dot,oneD,p112,p112,,1-color
 4296,3042,61,,441675,S,0,0,0,0,room,,91,fill,bowl,rsherd,carbon,McElmo B/W,,A,int wall,parallel to rim,ticked,20,0,0,B/W,0,0,0,0,0,0,0,thin,solid,oneD,p112,p112,,1-color
 4297,3043,61,,444254,S,240,0,0,0,room,,102,fill,bowl,rsherd,carbon,Mesa Verde B/W,,A,int wall,slanted to rim,ticked,70,0,0,B/W,0,0,0,0,0,0,0,thin thick,solid,oneD,p112,p112,,1-color
-4298,3044,61,,445403,S,280,0,0,0,room,,59,fill,bowl,rsherd,carbon,Mesa Verde B/W,,A,int wall,parallel to rim,ticked,80,0,0,B/W,0,0,0,0,1,0,0,thick,solid hatched,oneD,p111,p111,,
-4299,3044,61,,445403,S,280,0,0,0,room,,59,fill,bowl,rsherd,carbon,Mesa Verde B/W,,B,ext below rim,parallel to rim,ticked,35,0,0,B/W,0,0,0,0,0,0,0,none,solid dot,oneD,p112,p112,,
-4300,3045,61,,207095,S,0,0,0,0,room,,37,fill,bowl,rsherd,carbon,Mesa Verde B/W,,A,ext below rim,parallel to rim,plain,25,0,0,B/W,0,0,0,0,0,0,0,thick,solid,oneD,p1a1,p1a1,,
+4298,3044,61,,445403,S,280,0,0,0,room,,59,fill,bowl,rsherd,carbon,Mesa Verde B/W,,A,int wall,parallel to rim,ticked,80,0,0,B/W,0,0,0,0,1,0,0,thick,solid hatched,oneD,p111,p111,,null
+4299,3044,61,,445403,S,280,0,0,0,room,,59,fill,bowl,rsherd,carbon,Mesa Verde B/W,,B,ext below rim,parallel to rim,ticked,35,0,0,B/W,0,0,0,0,0,0,0,none,solid dot,oneD,p112,p112,,null
+4300,3045,61,,207095,S,0,0,0,0,room,,37,fill,bowl,rsherd,carbon,Mesa Verde B/W,,A,ext below rim,parallel to rim,plain,25,0,0,B/W,0,0,0,0,0,0,0,thick,solid,oneD,p1a1,p1a1,,null
 4309,3053,61,,235424,S,220,0,0,0,room,,57,roof,bowl,rsherd,carbon,Mesa Verde B/W,,A,ext below rim,parallel to rim,ticked,30,0,0,B/W,0,0,0,0,0,0,0,thick,solid hatched,oneD,pma2,pma2,,colored
 4310,3054,61,,238198,S,0,0,0,0,room,,37,fill,bowl,rsherd,carbon,Mesa Verde B/W,,A,int wall,parallel to rim,ticked,65,0,0,B/W,0,0,0,0,0,0,0,thick,checkerboard,twoD,p4m,p'c4mm,,2-color
 4311,3055,61,,307228,S,0,0,0,0,room,,129,roof,bowl,rsherd,carbon,Mesa Verde B/W,,A,ext below rim,slanted to rim,ticked,40,0,0,B/W,0,0,0,0,0,0,0,none,solid,oneD,p112,p112,,1-color
@@ -4756,7 +4756,7 @@ design ID,vessel ID,site ID,site desig,catalog #,museum,diameter,height,circumf,
 4788,3405,17,,177235,SS,220,100,0,0,,,0,,bowl,whole,mineral,Fourmile Poly,,B,ext below rim,parallel to rim,plain,50,190,6,B&W/O,0,0,0,0,0,0,0,none,line dot,oneD,pma2,pma2,,1-color
 4789,3406,17,,177239,SS,205,85,0,0,,,0,,bowl,whole,mineral,Jeddito B/Y,,A,int center,pendant from rim,plain,120,150,2,B/Y,0,0,1,0,1,0,0,thick,solid hatched,finite,C2,C2',,2-color
 4790,3406,17,,177239,SS,205,85,0,0,,,0,,bowl,whole,mineral,Jeddito B/Y,,B,ext below rim,parallel to rim,plain,40,160,2,B/Y,0,0,0,0,0,0,0,thick,solid,finite,C2,C2,,1-color
-4791,3407,17,,177241,SS,195,100,0,0,,,0,,bowl,whole,mineral,Fourmile Poly,,A,int center,allover,plain,120,160,4,B&W/R,0,0,0,0,1,0,0,thick,solid hatched,finite,C4,C4,,
+4791,3407,17,,177241,SS,195,100,0,0,,,0,,bowl,whole,mineral,Fourmile Poly,,A,int center,allover,plain,120,160,4,B&W/R,0,0,0,0,1,0,0,thick,solid hatched,finite,C4,C4,,null
 4792,3407,17,,177241,SS,195,100,0,0,,,0,,bowl,whole,mineral,Fourmile Poly,,B,ext below rim,parallel to rim,plain,65,160,4,B&W/R,0,0,0,0,0,0,0,none,line,oneD,p112,p112,,1-color
 4792,3407,17,,177241,SS,195,100,0,0,,,0,,bowl,whole,mineral,Fourmile Poly,,B,ext below rim,parallel to rim,plain,65,160,4,B&W/R,0,0,0,0,0,0,0,none,line,oneD,p112,p112,,1-color
 4800,3412,17,,177254,SS,80,140,550,566,,,0,,pitcher,whole,carbon,Tonto Poly,,A,ext body,parallel to rim,indeter,45,210,7,B/W,0,0,0,0,0,0,0,none,solid dot,oneD,p112,p112,,1-color
@@ -14814,38 +14814,38 @@ design ID,vessel ID,site ID,site desig,catalog #,museum,diameter,height,circumf,
 14872,10904,383,,351997,VGKB,110,63,0,0,House B,trash,0,,ladle,whole,mineral,Houck Poly,Fig 32a  Roberts 1932,B,ext body,pendant from rim,,0,0,0,R/O,0,0,0,0,0,0,0,none,solid,oneD,p112,p112,,1-color
 14873,10905,383,,351998,VGKB,136,63,0,0,House B,room,17,,ladle,partial,mineral,Houck Poly,Fig 32b  Roberts 1932,A,int wall,parallel to rim,,0,0,4,B/R,0,0,0,0,0,1,0,none,line solid,oneD,pmm2,p112,motifs vary,1-color
 14874,10905,383,,351998,VGKB,136,63,0,0,House B,room,17,,ladle,partial,mineral,Houck Poly,Fig 32b  Roberts 1932,B,ext body,parallel to rim,,0,0,0,R/O,0,0,0,0,0,0,0,none,solid,oneD,p111,p111,motifs vary,1-color
-14875,3086,62,,3224,AMNH,85,250,0,668,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,B,ext body,perpend to rim,solid line,0,0,5,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,
-14876,3086,62,,3224,AMNH,85,250,0,668,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,C,ext body,perpend to rim,solid line,0,0,5,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,
-14877,3086,62,,3224,AMNH,85,250,0,668,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,D,ext body,perpend to rim,solid line,0,0,5,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,
-14878,3087,62,,3225,AMNH,90,230,0,705,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,B,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,
-14879,3087,62,,3225,AMNH,90,230,0,705,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,C,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,
-14880,3087,62,,3225,AMNH,90,230,0,705,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,D,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,
-14881,3088,62,,3226,AMNH,85,250,0,652,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,B,ext body,perpend to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p1m1,p1m1,,
-14882,3088,62,,3226,AMNH,85,250,0,652,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,C,ext body,perpend to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p1m1,p1m1,,
-14883,3088,62,,3226,AMNH,85,250,0,652,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,D,ext body,perpend to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p1m1,p1m1,,
-14884,3099,62,,3250,AMNH,100,230,0,721,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,B,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,
-14885,3099,62,,3250,AMNH,100,230,0,721,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,C,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,
-14886,3099,62,,3250,AMNH,100,230,0,721,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,D,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,
-14887,3121,62,,3289,AMNH,110,265,0,907,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,B,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,
-14888,3125,62,,3377,AMNH,100,230,0,589,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,B,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,
-14889,3131,62,,3390,AMNH,115,240,0,0,room,,28,floor,cylinj,partial,mineral,Chaco B/W,,B,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,
-14890,3131,62,,3390,AMNH,115,240,0,0,room,,28,floor,cylinj,partial,mineral,Chaco B/W,,C,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,
-14891,3131,62,,3390,AMNH,115,240,0,0,room,,28,floor,cylinj,partial,mineral,Chaco B/W,,D,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,
-14892,3131,62,,3390,AMNH,115,240,0,0,room,,28,floor,cylinj,partial,mineral,Chaco B/W,,E,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,
-14893,3213,62,,5379,AMNH,0,229,0,0,room,,39,,cylinj,partial,mineral,Chaco B/W,,B,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,0,0,1,0,0,none,hatched,oneD,p112,p112,,
-14894,3213,62,,5379,AMNH,0,229,0,0,room,,39,,cylinj,partial,mineral,Chaco B/W,,C,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,0,0,1,0,0,none,hatched,oneD,p112,p112,,
-14895,3213,62,,5379,AMNH,0,229,0,0,room,,39,,cylinj,partial,mineral,Chaco B/W,,D,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,0,0,1,0,0,none,hatched,oneD,p112,p112,,
-14896,3214,62,,5384,AMNH,0,0,0,0,room,,39,upper fl,cylinj,rsherd,mineral,Chaco B/W,,B,ext body,parallel to rim,"unknown""",0,0,0,B/W,1,0,0,0,1,0,0,none,hatched,oneD,pmm2,pmm2,,
-14897,3215,62,,5437a,AMNH,96,224,0,0,room,,39,,cylinj,partial,mineral,Chaco B/W,,B,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,
-14898,3707,62,,336518,SS,35,170,480,576,room,,334,,canteen,whole,mineral,Gallup B/W,,B,ext sh,parallel to rim,,0,0,0,B/W,0,0,0,0,1,0,0,none,hatched,oneD,pm11,pm11,,
-14899,3707,62,,336518,SS,35,170,480,576,room,,334,,canteen,whole,mineral,Gallup B/W,,C,ext sh,parallel to rim,,0,0,0,B/W,0,0,0,0,1,0,0,none,hatched,oneD,pm11,pm11,,
-14900,10906,61,,143274,S,0,0,0,0,room,,98,,pitcher,partial,mineral,Chaco B/W,"LR:sand, nonlocal paste",A,ext neck,parallel to rim,,0,0,0,B/W,0,0,0,0,1,0,0,none,hatched,oneD,p111,p111,,
-14901,10906,61,,143274,S,0,0,0,0,room,,98,,pitcher,partial,mineral,Chaco B/W,"LR:sand, nonlocal paste",B,ext neck,parallel to rim,,0,0,0,B/W,0,0,0,0,1,0,0,none,hatched,oneD,p111,p111,,
-14902,10907,61,,140940,S,1250,0,0,0,room,,31,roof,bowl,whole,mineral,Chaco B/W,LR:augite diorite sand shale local,A,int center,allover,,0,0,0,B/W,1,0,0,0,1,0,0,none,hatched,twoD,p2,p2,,
-14903,10908,61,,606865,S,40,160,520,0,room,,81,fill,canteen,whole,carbon,Chuska B/W,"LR: trachyte, Chuskan paste",A,ext sh body,parallel to rim,,0,0,0,B/W,1,0,0,0,1,0,0,none,hatched,twoD,p2,p2,,
-14904,10909,61,,75415,S,0,0,0,0,room,,81,roof,pitcher,partial,carbon,Chuska B/W,,A,ext neck,parallel to rim,solid line,0,0,0,B/W,1,0,0,0,1,0,0,none,hatched,twoD,pgg,pgg,,
-14905,3106,62,,3264,AMNH,87,240,0,993,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,B,ext body,parallel to rim,solid line,0,0,0,B/W,0,0,1,0,1,0,0,none,hatched,oneD,p111,p111,,
-14906,3107,62,,3268,AMNH,90,163,395,490,room,,28,floor,pitcher,whole,mineral,Chaco B/W,,B,ext body,parallel to rim,solid line,0,0,0,B/W,0,0,0,0,1,0,0,none,hatched,oneD,pma2,pma2,,
+14875,3086,62,,3224,AMNH,85,250,0,668,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,B,ext body,perpend to rim,solid line,0,0,5,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,null
+14876,3086,62,,3224,AMNH,85,250,0,668,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,C,ext body,perpend to rim,solid line,0,0,5,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,null
+14877,3086,62,,3224,AMNH,85,250,0,668,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,D,ext body,perpend to rim,solid line,0,0,5,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,null
+14878,3087,62,,3225,AMNH,90,230,0,705,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,B,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,null
+14879,3087,62,,3225,AMNH,90,230,0,705,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,C,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,null
+14880,3087,62,,3225,AMNH,90,230,0,705,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,D,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,null
+14881,3088,62,,3226,AMNH,85,250,0,652,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,B,ext body,perpend to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p1m1,p1m1,,null
+14882,3088,62,,3226,AMNH,85,250,0,652,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,C,ext body,perpend to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p1m1,p1m1,,null
+14883,3088,62,,3226,AMNH,85,250,0,652,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,D,ext body,perpend to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p1m1,p1m1,,null
+14884,3099,62,,3250,AMNH,100,230,0,721,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,B,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,null
+14885,3099,62,,3250,AMNH,100,230,0,721,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,C,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,null
+14886,3099,62,,3250,AMNH,100,230,0,721,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,D,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,null
+14887,3121,62,,3289,AMNH,110,265,0,907,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,B,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,null
+14888,3125,62,,3377,AMNH,100,230,0,589,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,B,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,null
+14889,3131,62,,3390,AMNH,115,240,0,0,room,,28,floor,cylinj,partial,mineral,Chaco B/W,,B,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,null
+14890,3131,62,,3390,AMNH,115,240,0,0,room,,28,floor,cylinj,partial,mineral,Chaco B/W,,C,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,null
+14891,3131,62,,3390,AMNH,115,240,0,0,room,,28,floor,cylinj,partial,mineral,Chaco B/W,,D,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,null
+14892,3131,62,,3390,AMNH,115,240,0,0,room,,28,floor,cylinj,partial,mineral,Chaco B/W,,E,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,null
+14893,3213,62,,5379,AMNH,0,229,0,0,room,,39,,cylinj,partial,mineral,Chaco B/W,,B,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,0,0,1,0,0,none,hatched,oneD,p112,p112,,null
+14894,3213,62,,5379,AMNH,0,229,0,0,room,,39,,cylinj,partial,mineral,Chaco B/W,,C,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,0,0,1,0,0,none,hatched,oneD,p112,p112,,null
+14895,3213,62,,5379,AMNH,0,229,0,0,room,,39,,cylinj,partial,mineral,Chaco B/W,,D,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,0,0,1,0,0,none,hatched,oneD,p112,p112,,null
+14896,3214,62,,5384,AMNH,0,0,0,0,room,,39,upper fl,cylinj,rsherd,mineral,Chaco B/W,,B,ext body,parallel to rim,"unknown""",0,0,0,B/W,1,0,0,0,1,0,0,none,hatched,oneD,pmm2,pmm2,,null
+14897,3215,62,,5437a,AMNH,96,224,0,0,room,,39,,cylinj,partial,mineral,Chaco B/W,,B,ext body,parallel to rim,solid line,0,0,0,B/W,1,0,1,0,1,0,0,none,hatched,oneD,p112,p112,,null
+14898,3707,62,,336518,SS,35,170,480,576,room,,334,,canteen,whole,mineral,Gallup B/W,,B,ext sh,parallel to rim,,0,0,0,B/W,0,0,0,0,1,0,0,none,hatched,oneD,pm11,pm11,,null
+14899,3707,62,,336518,SS,35,170,480,576,room,,334,,canteen,whole,mineral,Gallup B/W,,C,ext sh,parallel to rim,,0,0,0,B/W,0,0,0,0,1,0,0,none,hatched,oneD,pm11,pm11,,null
+14900,10906,61,,143274,S,0,0,0,0,room,,98,,pitcher,partial,mineral,Chaco B/W,"LR:sand, nonlocal paste",A,ext neck,parallel to rim,,0,0,0,B/W,0,0,0,0,1,0,0,none,hatched,oneD,p111,p111,,null
+14901,10906,61,,143274,S,0,0,0,0,room,,98,,pitcher,partial,mineral,Chaco B/W,"LR:sand, nonlocal paste",B,ext neck,parallel to rim,,0,0,0,B/W,0,0,0,0,1,0,0,none,hatched,oneD,p111,p111,,null
+14902,10907,61,,140940,S,1250,0,0,0,room,,31,roof,bowl,whole,mineral,Chaco B/W,LR:augite diorite sand shale local,A,int center,allover,,0,0,0,B/W,1,0,0,0,1,0,0,none,hatched,twoD,p2,p2,,null
+14903,10908,61,,606865,S,40,160,520,0,room,,81,fill,canteen,whole,carbon,Chuska B/W,"LR: trachyte, Chuskan paste",A,ext sh body,parallel to rim,,0,0,0,B/W,1,0,0,0,1,0,0,none,hatched,twoD,p2,p2,,null
+14904,10909,61,,75415,S,0,0,0,0,room,,81,roof,pitcher,partial,carbon,Chuska B/W,,A,ext neck,parallel to rim,solid line,0,0,0,B/W,1,0,0,0,1,0,0,none,hatched,twoD,pgg,pgg,,null
+14905,3106,62,,3264,AMNH,87,240,0,993,room,,28,floor,cylinj,whole,mineral,Chaco B/W,,B,ext body,parallel to rim,solid line,0,0,0,B/W,0,0,1,0,1,0,0,none,hatched,oneD,p111,p111,,null
+14906,3107,62,,3268,AMNH,90,163,395,490,room,,28,floor,pitcher,whole,mineral,Chaco B/W,,B,ext body,parallel to rim,solid line,0,0,0,B/W,0,0,0,0,1,0,0,none,hatched,oneD,pma2,pma2,,null
 14907,10910,384,,15a,SB,0,0,0,0,,,0,,bowl,whole,mineral,La Plata B/W,Bull 92 Pl 15a,A,int center,allover,,0,0,2,B/W,0,0,0,0,0,0,0,none,line,finite,C2,C2,,1-color
 14908,10911,384,,15b,SB,0,0,0,0,,,0,,bowl,whole,mineral,La Plata B/W,Bull 92 Pl 15b,A,int center,allover,,0,0,2,B/W,0,0,0,0,0,0,0,none,line,finite,C2,C2,,1-color
 14909,10912,384,,15c,SB,0,0,0,0,,,0,,bowl,whole,mineral,La Plata B/W,Bull 92 Pl 15c,A,int center,allover,,0,0,2,B/W,0,0,0,0,0,0,0,none,line,finite,C2,C2,,1-color
@@ -20126,7 +20126,7 @@ design ID,vessel ID,site ID,site desig,catalog #,museum,diameter,height,circumf,
 21499,16400,505,,15f,,0,0,0,0,,,0,,bowl,,,Tres Alamos R/B,,A,int center,allover,,0,0,4,R/B,0,0,0,0,0,0,0,,line solid,finite,D4,D4,,1-color
 21500,16401,505,,16a,,0,0,0,0,,,0,,bowl,,,Dragoon R/B,,A,int center,allover,,0,0,0,R/B,0,0,0,0,0,0,0,,solid,twoD,p2,p2,,1-color
 21501,16402,505,,16b,,0,0,0,0,,,0,,bowl,,,Tres Alamos R/B,,A,int center,allover,,0,0,0,R/B,0,0,0,1,0,0,0,,line solid,twoD,p2,p2,,1-color
-21502,16403,505,,16c,,0,0,0,0,,,0,,bowl,,,Tres Alamos R/B,,A,int center,allover,,0,0,0,R/B,0,0,0,0,0,0,0,,line solid,,p4m,C2,,
+21502,16403,505,,16c,,0,0,0,0,,,0,,bowl,,,Tres Alamos R/B,,A,int center,allover,,0,0,0,R/B,0,0,0,0,0,0,0,,line solid,,p4m,C2,,null
 21503,16404,505,,16d,,0,0,0,0,,,0,,bowl,,,Tres Alamos R/B,,A,int center,allover,,0,0,4,R/B,0,0,0,0,0,0,0,,line solid,finite,C4,C4,,1-color
 21504,16404,505,,16d,,0,0,0,0,,,0,,bowl,,,Tres Alamos R/B,,B,rim,parallel to rim,,0,0,11,R/B,0,0,0,0,0,0,0,,line solid,oneD,pmm2,pmm2,,1-color
 21505,16405,505,,16e,,0,0,0,0,,,0,,bowl,,,Dragoon R/B,,A,int center,allover,,0,0,4,R/B,0,0,0,0,0,0,0,,solid,finite,C4,C2,,1-color
