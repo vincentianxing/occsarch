@@ -4602,7 +4602,7 @@ design ID,vessel ID,site ID,site desig,catalog #,museum,diameter,height,circumf,
 4631,3301,9,,72267,FM,0,0,0,0,,,0,,bowl,whole,mineral,Jeddito B/Y,,B,ext below rim,parallel to rim,plain,0,0,0,B/Y,1,0,0,0,1,0,1,none,solid,finite,C2,C2,birds,1-color
 4632,3302,9,,72311,FM,0,0,0,0,,,0,,ladle,whole,mineral,Jeddito B/Y,,A,int center,allover,ticked,0,0,0,B/Y,1,0,0,0,0,0,0,thick,line,twoD,p4m,p4,,1-color
 4633,3303,9,,72317,FM,0,0,0,0,,,0,,ladle,whole,mineral,Jeddito B/Y,,A,int center,pendant from rim,plain,0,0,4,B/Y,0,0,0,0,0,0,0,thick,line solid,finite,C4,C4,,1-color
-4635,3304,9,,72318,FM,0,0,0,0,,,0,,ladle,whole,mineral,Jeddito B/Y,,A,int wall,parallel to rim,plain,0,0,0,B/Y,0,0,1,0,0,0,0,thin thick,checkerboard,twoD,pmm,c'mm,,2--color
+4635,3304,9,,72318,FM,0,0,0,0,,,0,,ladle,whole,mineral,Jeddito B/Y,,A,int wall,parallel to rim,plain,0,0,0,B/Y,0,0,1,0,0,0,0,thin thick,checkerboard,twoD,pmm,c'mm,,2-color
 4636,3304,9,,72318,FM,0,0,0,0,,,0,,ladle,whole,mineral,Jeddito B/Y,,B,int center,center base,plain,0,0,1,B/Y,0,0,1,0,0,0,0,thin,solid,finite,D1,D1,,1-color
 4637,3305,9,,72320,FM,0,0,0,0,,,0,,ladle,whole,mineral,Jeddito B/Y,,A,int center,allover,plain,0,0,2,B/Y,0,0,0,0,0,0,0,,solid hatched,finite,C2,C2,,colored
 4638,3306,9,,72326,FM,0,0,0,0,,,0,,ladle,whole,mineral,Jeddito B/Y,,A,int center,pendant from rim,plain,0,0,1,B/Y,0,0,0,0,0,0,0,,solid dot,finite,C1,C1,,1-color
@@ -5460,7 +5460,7 @@ design ID,vessel ID,site ID,site desig,catalog #,museum,diameter,height,circumf,
 5501,3911,63,,26606,MV,121,48,0,245,room,,77,fill,ladle,whole,carbon,McElmo B/W,,A,int center,allover,ticked,0,0,2,B/W,0,0,0,0,0,0,0,none,line,finite,D2,D2,,1-color
 5502,3912,63,,26607,MV,127,52,0,396,room,,77,fill,ladle,whole,carbon,McElmo B/W,,A,int wall,parallel to rim,ticked,30,0,8,B/W,0,0,0,0,0,0,0,thin thick,line,oneD,p112,p112,,1-color
 5503,3913,63,,26619,MV,180,140,0,1400,room,,79,floor,bowl,whole,carbon,Mesa Verde B/W,,A,int wall,parallel to rim,ticked zig,65,0,10,B/W,0,0,0,0,0,0,0,thin thick,line solid,oneD,p1a1,p1a1,,1-color
-5504,3913,63,,26619,MV,180,140,0,1400,room,,79,floor,bowl,whole,carbon,Mesa Verde B/W,,B,ext below rim,parallel to rim,ticked,40,0,3,B/W,0,0,0,0,0,0,1,none,solid,finite,D1,D1,birds,1-color`
+5504,3913,63,,26619,MV,180,140,0,1400,room,,79,floor,bowl,whole,carbon,Mesa Verde B/W,,B,ext below rim,parallel to rim,ticked,40,0,3,B/W,0,0,0,0,0,0,1,none,solid,finite,D1,D1,birds,1-color
 5505,3914,63,,26620,MV,150,65,0,381,room,,79,floor,bowl,whole,carbon,McElmo B/W,,A,int wall,parallel to rim,ticked,19,0,6,B/W,0,0,0,0,0,0,0,thick,solid,oneD,pma2,pma2,,1-color
 5506,3914,63,,26620,MV,150,65,0,381,room,,79,floor,bowl,whole,carbon,McElmo B/W,,B,ext below rim,perpend to rim,ticked,70,0,2,B/W,0,0,0,0,0,0,1,none,line,finite,D1,D1,bird feet pair,1-color
 5507,3915,63,,26623,MV,0,106,0,0,room,,81,fill,bowl,partial,carbon,Mesa Verde B/W,indented base,A,int wall,parallel to rim,ticked,51,0,0,B/W,0,0,0,0,0,0,0,thin thick,line solid dot,oneD,p1a1,p1a1,,1-color
@@ -9436,7 +9436,7 @@ design ID,vessel ID,site ID,site desig,catalog #,museum,diameter,height,circumf,
 9479,6799,6,,213149,SS,190,90,0,770,,,0,,bowl,whole,mineral,Jeddito B/Y,,A,int center,allover,plain,,,1,B/Y,0,0,1,0,0,0,1,thick,line solid,finite,D1,D1,bird w/geometrics,1-color
 9480,6800,6,,213151,SS,170,70,0,492,,,0,,bowl,whole,mineral,Jeddito B/Y,,A,int center,center base,solid line,70,130,1,B/Y,0,0,1,0,0,0,1,thin thick,solid,finite,C1,C1,tail w/geometrics,1-color
 9481,6800,6,,213151,SS,170,70,0,492,,,0,,bowl,whole,mineral,Jeddito B/Y,,B,ext below rim,slanted to rim,plain,60,180,1,B/Y,0,0,0,0,0,0,0,none,solid,finite,C2,C2,,1-color
-9482,6801,6,,213152,SS,155,70,0,428,,,0,,bowl,whole,mineral,Jeddito B/Y,,A,int wall,parallel to rim,plain,60,110,5,B/Y,0,0,1,1,0,0,0,thick,solid,oneD,pm11,p111,trans betw pat cat,1-coloe
+9482,6801,6,,213152,SS,155,70,0,428,,,0,,bowl,whole,mineral,Jeddito B/Y,,A,int wall,parallel to rim,plain,60,110,5,B/Y,0,0,1,1,0,0,0,thick,solid,oneD,pm11,p111,trans betw pat cat,1-color
 9483,6801,6,,213152,SS,155,70,0,428,,,0,,bowl,whole,mineral,Jeddito B/Y,,B,ext below rim,slanted to rim,plain,50,120,1,B/Y,0,0,0,0,0,0,0,none,solid,finite,C2,C2,,1-color
 9484,6802,6,,213153,SS,220,85,0,670,,,0,,bowl,whole,mineral,Jeddito B/Y,,A,int center,allover,plain,110,150,2,B/Y,0,0,1,0,1,0,1,thick,solid line hatched,finite,C2,asym,"tracks,dragonflies",colored
 9485,6802,6,,213153,SS,220,85,0,670,,,0,,bowl,whole,mineral,Jeddito B/Y,,B,ext below rim,parallel to rim,plain,20,160,11,B/Y,0,0,0,0,0,0,0,none,solid,oneD,p111,p111,,1-color
@@ -10553,7 +10553,7 @@ design ID,vessel ID,site ID,site desig,catalog #,museum,diameter,height,circumf,
 10605,7647,126,,700,CU,0,0,0,0,burial,,0,,pitcher,partial,,Cortez B/W,Morris 1939 Pl262i,A,ext body,parallel to rim,indeter,0,0,0,B/W,0,0,0,0,0,1,0,thick,line solid dot,oneD,pmm2,p112,,1-color
 10606,7648,126,,701,CU,0,0,0,0,burial,,0,,bowl,whole,,Bluff B/R,Morris 1939 Pl256i,A,int center,allover,,0,0,2,B/R,1,0,0,0,0,0,0,none,line,finite,D2,D2,,1-color
 10607,7649,110,,3849,CU,0,0,0,0,Bldg III,,3,,pitcher,whole,,La Plata B/W,Maidens,A,ext body,parallel to rim,,0,0,0,B/W,0,0,0,0,0,0,1,none,,oneD,pm11,pm11,maidens w/whorls,1-color
-10608,7650,110,,3853,CU,0,0,0,0,Bldg III,,3,,scoop,whole,,La Plata B/W,,A,int center,allover,solid line,0,0,2,B/W,0,0,0,0,0,0,0,none,line solid,finite,C2,C2,,1-colo
+10608,7650,110,,3853,CU,0,0,0,0,Bldg III,,3,,scoop,whole,,La Plata B/W,,A,int center,allover,solid line,0,0,2,B/W,0,0,0,0,0,0,0,none,line solid,finite,C2,C2,,1-color
 10609,7651,111,,589,CU,220,0,0,0,,,0,,bowl,whole,,Piedra B/W,Morris 1939 Pl283c,A,int wall,parallel to rim,,0,0,4,B/W,0,0,0,0,0,1,0,none,line solid,oneD,pmm2,p111,,1-color
 10610,7652,111,,614,CU,0,0,0,0,,,0,,scoop,whole,,Piedra B/W,Morris 1939 Pl238g,A,int center,allover,solid line,0,0,1,B/W,0,0,0,0,0,0,0,none,line,finite,C1,C1,,1-color
 10611,7653,124,,4005,SAR,30,130,0,0,,,0,,canteen,whole,,Mesa Verde B/W,Morris 1939 Pl307f,A,ext sh body,pendant from rim,ticked,115,0,4,B/W,0,0,0,0,1,0,0,thick,solid hatched,finite,C4,C4,,colored
@@ -15545,7 +15545,7 @@ design ID,vessel ID,site ID,site desig,catalog #,museum,diameter,height,circumf,
 15618,11500,415,,551-370,UCLA,0,0,0,0,,,0,,,,,,BBS 1945 Fig 60G,A,,,,0,0,0,B/R,0,0,0,0,0,0,0,none,checkerboard,twoD,p2,p'b2,,2-color
 15619,11501,33,,568-331,UCLA,0,0,0,0,,,0,,bowl,whole,,Dogoszhi B/W,BBS 1945 Fig 35C,A,int wall,pendant from rim,,0,0,3,B/W,0,0,0,0,1,0,0,thick,solid hatched,finite,C3,C3,,colored
 15620,11502,33,,568-154,UCLA,0,0,0,0,,,0,,seedj,whole,,Tusayan B/W,BBS 1945 Fig 36G,A,ext sh,parallel to rim,,0,0,0,B/W,0,0,0,1,0,0,0,thin thick,solid,oneD,p112,p112,,1-color
-15621,11503,33,,568-409,UCLA,0,0,0,0,,,0,,mug,whole,carbon,Tusayan B/W,BBS 1945 Fig 37H,A,ext sh body,parallel to rim,,0,0,0,B/W,0,0,0,0,0,0,0,thick,solid,oneD,p112,p112,,1color
+15621,11503,33,,568-409,UCLA,0,0,0,0,,,0,,mug,whole,carbon,Tusayan B/W,BBS 1945 Fig 37H,A,ext sh body,parallel to rim,,0,0,0,B/W,0,0,0,0,0,0,0,thick,solid,oneD,p112,p112,,1-color
 15622,11504,33,,568-284,UCLA,0,0,0,0,,,0,,bowl,whole,,Tusayan B/W,BBS 1945 Fig 38A,A,int wall,parallel to rim,,0,0,0,B/W,0,0,0,0,0,0,0,thin thick,solid,oneD,p112,p112,,1-color
 15623,11505,33,,568-89,UCLA,0,0,0,0,,,0,,bowl,whole,,Tusayan B/W,BBS 1945 Fig 38E,A,int wall,pendant from rim,,0,0,3,B/W,0,0,0,1,0,0,0,none,solid,finite,C3,C3,,1-color
 15624,11506,33,,568-175,UCLA,0,0,0,0,,,0,,bowl,whole,,Tusayan B/W,BBS 1945 Fig 38I,A,int wall,parallel to rim,,0,0,0,B/W,0,0,0,0,0,0,0,thin thick,solid,oneD,p112,p112,,1-color
@@ -19714,7 +19714,7 @@ design ID,vessel ID,site ID,site desig,catalog #,museum,diameter,height,circumf,
 21087,16020,493,,3362,,32,15,0,0,room,burial,134,,bowl,whole,,Mimbres B/W,style III,A,int wall,parallel to rim,,0,0,4,B/W,0,0,0,1,0,1,0,,hatch solid,oneD,pmm2,p112,,colored
 21088,16021,493,,3363,,22,10,0,0,room,burial,134,,bowl,whole,,Mimbres B/W,style I,A,int center,allover,,0,0,2,B/W,0,0,0,1,0,0,0,,hatch crosshatch sol,finite,D4,C2,,colored
 21089,16022,493,,3364,,21,11,0,0,room,burial,135,,bowl,whole,,Mimbres B/W,style III,A,int center,allover,,0,0,4,B/W,1,0,0,0,0,0,0,,hatch solid,finite,C4,C4,,colored
-21090,16023,493,,3365,,16,7,0,0,room,burial,134,,bowl,partial,,Mimbres B/W,style II,A,int center,allover,,0,0,2,B/W,0,0,0,0,0,0,0,,solid,finite,D2,d1,,1-COLOR
+21090,16023,493,,3365,,16,7,0,0,room,burial,134,,bowl,partial,,Mimbres B/W,style II,A,int center,allover,,0,0,2,B/W,0,0,0,0,0,0,0,,solid,finite,D2,d1,,1-color
 21091,16024,493,,3367,,20,10,0,0,room,burial,134,,bowl,whole,,Mimbres B/W,style I,A,int wall,parallel to rim,,0,0,4,B/W,0,0,0,0,0,0,0,,solid,oneD,p112,p112,,1-color
 21092,16025,493,,3368,,29,12,0,0,,burial,0,,bowl,whole,,Mimbres B/W,style III,A,int wall,parallel to rim,,0,0,2,B/W,0,0,0,1,0,0,0,,hatch solid,finite,C2,asym,motifs not 2fold rel,colored
 21093,16026,493,,3369,,28,11,0,0,,,0,,bowl,whole,,Mimbres B/W,style II,A,int wall,parallel to rim,,0,0,5,B/W,0,0,0,0,0,0,0,,solid,oneD,p112,p112,,1-color
