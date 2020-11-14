@@ -195,7 +195,7 @@ require([
       },
     });
 
-    const dataURL = 'https://services5.arcgis.com/yVCUkdcXCabMuIIK/arcgis/rest/services/latlonsites_fuzz2/FeatureServer';
+    const dataURL = 'https://services5.arcgis.com/yVCUkdcXCabMuIIK/arcgis/rest/services/11_13_Fuzzed_Sites/FeatureServer';
     var dataLayer = new FeatureLayer({
       url: dataURL,
       // outFields configured for tables of sites
@@ -205,8 +205,8 @@ require([
         'site_name',
         'state_quad',
         'Elevation',
-        'earliest',
-        'latest',
+        'earliest_date',
+        'latest_date',
       ],
       popupTemplate: {
         title: 'Site ID {site_ID}',
@@ -228,8 +228,8 @@ require([
         '<tr><td>Site Name</td><td>' + attributes.site_name + '</tr>' +
         '<tr><td>State Quad (todo: what is this?)</td><td>' + attributes.state_quad + '</tr>' +
         '<tr><td>Elevation</td><td>' + attributes.Elevation + '</tr>' +
-        '<tr><td>Earliest Date</td><td>' + attributes.earliest + '</tr>' +
-        '<tr><td>Latest Date</td><td>' + attributes.latest + '</tr>' +
+        '<tr><td>Earliest Date</td><td>' + attributes.earliest_date + '</tr>' +
+        '<tr><td>Latest Date</td><td>' + attributes.latest_date + '</tr>' +
         '</table>';
       var tmp = document.createElement('div');
       tmp.innerHTML = siteData;
@@ -803,7 +803,7 @@ require([
       if (!document.getElementById('ignoreTime').checked) {
         // select designs that could have been created in the selected year
         var timeSelection = timeSlider.values[0];
-        timeClause += 'earliest <= ' + timeSelection + ' and latest >= ' + timeSelection;
+        timeClause += 'earliest_date <= ' + timeSelection + ' and latest_date >= ' + timeSelection;
       }
       // TODO: filter by sites such that at least one of the designs in the site is the selected symmetry
       /*
