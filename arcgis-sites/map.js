@@ -267,7 +267,7 @@ require([
   
     var graphicsLayer = new GraphicsLayer();
     var bufferLayer = new GraphicsLayer({
-      blendMode: 'color-burn',
+      blendMode: 'normal',
     });
   
     // Create basemap from the custom map
@@ -613,7 +613,7 @@ require([
           geometry: buffer,
           symbol: {
             type: 'simple-fill',
-            color: [150, 150, 150],
+            color: [255, 255, 255, 0],
             outline: {
               color: '#000000',
               width: 2,
