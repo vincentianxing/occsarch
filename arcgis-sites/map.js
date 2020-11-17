@@ -203,14 +203,17 @@ require([
         'site_ID',
         'site_desig',
         'site_name',
-        'state_quad',
-        'Elevation',
         'earliest_date',
         'latest_date',
       ],
       popupTemplate: {
         title: 'Site ID {site_ID}',
-        outFields: ['site_desig'],
+        outFields: [
+          'site_desig',
+          'site_name',
+          'earliest_date',
+          'latest_date'
+        ],
         content: setContentInfo,
       },
       renderer: uniqueRenderer,
@@ -226,8 +229,6 @@ require([
       var siteData = '<table>' +
         '<tr><td>Site Designation</td><td>' + attributes.site_desig + '</tr>' + 
         '<tr><td>Site Name</td><td>' + attributes.site_name + '</tr>' +
-        '<tr><td>State Quad (todo: what is this?)</td><td>' + attributes.state_quad + '</tr>' +
-        '<tr><td>Elevation</td><td>' + attributes.Elevation + '</tr>' +
         '<tr><td>Earliest Date</td><td>' + attributes.earliest_date + '</tr>' +
         '<tr><td>Latest Date</td><td>' + attributes.latest_date + '</tr>' +
         '</table>';
