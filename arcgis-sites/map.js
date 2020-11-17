@@ -717,9 +717,12 @@ require([
     // Chart is created using the Chart.js library
     var chart;
     function updateChart(newData) {
-      // TODO: draw the bars in descending order
-      var syms = Object.keys(newData);
-      var counts = Object.values(newData);
+      // sort the new data and prepare it for the chart
+      var sorted = sortBars(newData);
+      var syms = [];
+      var counts = [];
+      sorted.forEach(element => syms.push(element[0]));
+      sorted.forEach(element => counts.push(element[1]));
   
       if (!chart) {
         // Get the canvas element and render the chart in it
@@ -766,6 +769,7 @@ require([
             legend: {
               display: false
             },
+            // disable animations to improve performance
             animation: {
               duration: 0,
             },
@@ -795,6 +799,23 @@ require([
           updateChart(newData);
         });
       }
+    }
+
+    // takes an object and sorts it, descending, according to the 
+    // numeric value of those properties
+    // returns an array of length 2 arrays, with the first element being
+    // the property name and the second element being the property value
+    function sortBars(bars) {
+      var sortable = [];
+      for (var bar in bars) {
+          sortable.push([bar, bars[bar]]);
+      }
+      
+      sortable.sort(function(a, b) {
+          return b[1] - a[1];
+      });
+
+      return sortable;
     }
   
     function getWhereClause() {
