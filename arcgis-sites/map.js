@@ -286,9 +286,8 @@ require([
     var view = new MapView({
       container: 'viewDiv',
       map: map,
-      //TODO: figure out the best center point and also move circle selector to a better initial point
-      center: [-108, 35.3],
-      zoom: 7,
+      center: [-108.7, 34.3],
+      zoom: 6,
     });
   
     var featureLayerView;
