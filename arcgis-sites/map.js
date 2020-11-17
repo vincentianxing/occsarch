@@ -826,27 +826,7 @@ require([
         var timeSelection = timeSlider.values[0];
         timeClause += 'earliest_date <= ' + timeSelection + ' and latest_date >= ' + timeSelection;
       }
-      // TODO: filter by sites such that at least one of the designs in the site is the selected symmetry
-      /*
-      // match where symField is equal to any of
-      // the selected symmetries in the filter drop down
-      if (!selectedSymmetries.includes('All')) {
-        symClause += '(1 = 0 '; // just to avoid trying to remove the 'or' on i = 0
-  
-        // SQL query for each selected symmetry
-        for (var i = 0; i < selectedSymmetries.length; i++) {
-          var sym = selectedSymmetries[i];
-          // if sym contains an apostrophe (single quote),
-          // add in an additional apostrophe to escape it in the SQL query
-          var apostrophe = sym.indexOf("'");
-          if (apostrophe > -1) {
-            sym = sym.substring(0, apostrophe) + "'" + sym.substring(apostrophe);
-          }
-          symClause += ' or ' + symField + " = '" + sym + "'";
-        }
-        symClause += ')';
-      }
-      */
+      
       if (timeClause !== '' && symClause !== '') {
         return timeClause + ' and ' + symClause;
       } else {
