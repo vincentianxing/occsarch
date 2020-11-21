@@ -746,7 +746,7 @@ require([
             responsive: false,
             title: {
               display: true,
-              text: 'Symmetry Occurrences',
+              text: 'Number of Cases',
             },
             scales: {
               xAxes: [
