@@ -146,8 +146,8 @@ require([
       'Tusayan B/W',
       'Fourmile Poly',
       'Matsaki Poly',
-      'Tanque Verde Poly',
-    ];
+      'Tanque Verde R/B',
+    ].sort();
 
     // show a list of data types depending on the selected data field
     function updateDataTypes(field) {
