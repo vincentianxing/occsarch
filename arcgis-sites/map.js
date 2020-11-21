@@ -144,6 +144,9 @@ require([
       'Tonto Poly',
       'Tularosa B/W',
       'Tusayan B/W',
+      'Fourmile Poly',
+      'Matsaki Poly',
+      'Tanque Verde Poly',
     ];
 
     // show a list of data types depending on the selected data field
