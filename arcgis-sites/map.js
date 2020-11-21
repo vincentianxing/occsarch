@@ -223,18 +223,37 @@ require([
       legendEnabled: false,
     });
 
+    // This defines what will show up in the popup when you click on a 
+    // site. Takes a Feature (arcGIS object) as input and returns an
+    // HTMLElement
+
     function setContentInfo(feature) {
       var node = document.createElement('div');
       node.classList = 'SitePopup';
 
-      // table with site fields
+      // clean the data we get from the feature
       var attributes = feature.graphic.attributes;
+
+      // returns an empty string if the attribute is falsy
+      // we are just concerned with when it is undefined or null
+      function parseAttr(attr) {
+        return attr ? attr : '';
+      }
+
+      var site_ID = attributes.site_ID; // site_ID will never be null
+      var site_desig = parseAttr(attributes.site_desig);
+      var site_name = parseAttr(attributes.site_name);
+      var earliest_date = parseAttr(attributes.earliest_date);
+      var latest_date = parseAttr(attributes.latest_date);
+
+      // table with site fields
       var siteData = '<table>' +
-        '<tr><td>Site Designation</td><td>' + attributes.site_desig + '</tr>' + 
-        '<tr><td>Site Name</td><td>' + attributes.site_name + '</tr>' +
-        '<tr><td>Earliest Date</td><td>' + attributes.earliest_date + '</tr>' +
-        '<tr><td>Latest Date</td><td>' + attributes.latest_date + '</tr>' +
+        '<tr><td>Site Designation</td><td>' + site_desig + '</td></tr>' + 
+        '<tr><td>Site Name</td><td>' + site_name + '</td></tr>' +
+        '<tr><td>Earliest Date</td><td>' + earliest_date + '</td></tr>' +
+        '<tr><td>Latest Date</td><td>' + latest_date + '</td></tr>' +
         '</table>';
+      // some magic to turn the above html into an HTMLElement
       var tmp = document.createElement('div');
       tmp.innerHTML = siteData;
       var table = tmp.firstChild;
@@ -243,7 +262,7 @@ require([
       node.appendChild(table);
 
       // shows fraction of designs present in the site that accord with the selected filter
-      var site = sites.get(attributes.site_ID);
+      var site = sites.get(site_ID);
       var curDesigns = site[symField].get(selectedSymmetry);
       if (typeof curDesigns === 'undefined') {
         curDesigns = 0;
