@@ -60,14 +60,16 @@ require([
       dataLayer.renderer = renderer;
     }
 
+    // works with css color names
     function assignColor(frequency) {
-      if (frequency == 1) return 'white';
-      if (frequency > 0.5) return 'red';
-      if (frequency > 0.25) return 'yellow';
-      if (frequency > 0.1) return 'green';
-      if (frequency > 0.05) return 'blue';
-      // pink is for <5%
-      return 'pink';
+      if (frequency > 0.51) return 'red';
+      if (frequency > 0.41) return 'orange';
+      if (frequency > 0.31) return 'yellow';
+      if (frequency > 0.21) return 'lightgreen';
+      if (frequency > 0.11) return 'dodgerblue';
+      if (frequency > 0.06) return 'orchid';
+      // <5%
+      return 'lightgray';
     }
   
     // defining DOM nodes and constants for the data field and data type selectors
