@@ -62,12 +62,12 @@ require([
 
     // works with css color names
     function assignColor(frequency) {
-      if (frequency > 0.51) return 'red';
-      if (frequency > 0.41) return 'orange';
-      if (frequency > 0.31) return 'yellow';
-      if (frequency > 0.21) return 'lightgreen';
-      if (frequency > 0.11) return 'dodgerblue';
-      if (frequency > 0.06) return 'orchid';
+      if (frequency > 0.51) return 'plum';
+      if (frequency > 0.41) return 'red';
+      if (frequency > 0.31) return 'dodgerblue';
+      if (frequency > 0.21) return 'yellow';
+      if (frequency > 0.11) return 'lightgreen';
+      if (frequency > 0.06) return 'orange';
       // <5%
       return 'lightgray';
     }
