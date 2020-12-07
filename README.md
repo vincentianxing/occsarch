@@ -1,4 +1,4 @@
-[Hosted on OCCS](occs.cs.oberlin.edu/~kvetter)
+[Hosted on OCCS](https://occs.cs.oberlin.edu/~kvetter)
 
 # Instructions for Navigating the Interactive Symmetry Map
 
