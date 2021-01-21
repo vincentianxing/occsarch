@@ -1,6 +1,10 @@
 [Hosted on OCCS](https://occs.cs.oberlin.edu/~kvetter)
 
-# Instructions for Navigating the Interactive Symmetry Map
+The arcgis-sites folder contains the interactive symmetry map webpage and associated files. 
+
+SiteLegend.html contains a table that has some information about each of the sites. 
+
+## Instructions for Navigating the Interactive Symmetry Map
 
 This is an interactive map that visualizes how different plane pattern symmetries were used to structure ceramic designs over time and space in the prehistoric American Southwest from c. AD 600-AD 1600. The map shows the prehistoric occupation of sites in the states of Arizona, New Mexico, and the southern portions of Utah and Colorado superimposed on a USGS topographic map of the area. Users can study symmetry use at a site, region, or temporal period. In addition to studying the changing use of 30 different design symmetries, users can compare these distributions with three different color states (1-color, colored, and 2-color) and 35 different ceramic types. When the program is opened, selection and information boxes appear at the edges. The user must select among different parameter combinations.
 
